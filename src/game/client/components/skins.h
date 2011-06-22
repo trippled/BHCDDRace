@@ -1,6 +1,9 @@
+/* (c) Magnus Auvinen. See licence.txt in the root of the distribution for more information. */
+/* If you are missing that file, acquire a complete release at teeworlds.com.                */
 #ifndef GAME_CLIENT_COMPONENTS_SKINS_H
 #define GAME_CLIENT_COMPONENTS_SKINS_H
 #include <base/vmath.h>
+#include <base/tl/sorted_array.h>
 #include <game/client/component.h>
 
 class CSkins : public CComponent
@@ -11,29 +14,23 @@ public:
 	{
 		int m_OrgTexture;
 		int m_ColorTexture;
-		char m_aName[31];
-		char m_aTerm[1];
+		char m_aName[24];
 		vec3 m_BloodColor;
-	} ;
 
-	CSkins();
-	
-	void Init();
-	
-	vec4 GetColor(int v);
+		bool operator<(const CSkin &Other) { return str_comp(m_aName, Other.m_aName) < 0; }
+	};
+
+	void OnInit();
+
+	vec3 GetColorV3(int v);
+	vec4 GetColorV4(int v);
 	int Num();
 	const CSkin *Get(int Index);
 	int Find(const char *pName);
-	
+
 private:
-	enum
-	{
-		MAX_SKINS=256,
-	};
+	sorted_array<CSkin> m_aSkins;
 
-	CSkin m_aSkins[MAX_SKINS];
-	int m_NumSkins;
-
-	static void SkinScan(const char *pName, int IsDir, void *pUser);
+	static int SkinScan(const char *pName, int IsDir, int DirType, void *pUser);
 };
 #endif

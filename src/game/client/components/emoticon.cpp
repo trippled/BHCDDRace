@@ -1,10 +1,11 @@
+/* (c) Magnus Auvinen. See licence.txt in the root of the distribution for more information. */
+/* If you are missing that file, acquire a complete release at teeworlds.com.                */
 #include <engine/graphics.h>
 #include <engine/shared/config.h>
 #include <game/generated/protocol.h>
 #include <game/generated/client_data.h>
 
 #include <game/gamecore.h> // get_angle
-#include <game/client/gameclient.h>
 #include <game/client/ui.h>
 #include <game/client/render.h>
 #include "emoticon.h"
@@ -16,7 +17,9 @@ CEmoticon::CEmoticon()
 
 void CEmoticon::ConKeyEmoticon(IConsole::IResult *pResult, void *pUserData)
 {
-	((CEmoticon *)pUserData)->m_Active = pResult->GetInteger(0) != 0;
+	CEmoticon *pSelf = (CEmoticon *)pUserData;
+	if(!pSelf->m_pClient->m_Snap.m_SpecInfo.m_Active && pSelf->Client()->State() != IClient::STATE_DEMOPLAYBACK)
+		pSelf->m_Active = pResult->GetInteger(0) != 0;
 }
 
 void CEmoticon::ConEmote(IConsole::IResult *pResult, void *pUserData)
@@ -37,6 +40,11 @@ void CEmoticon::OnReset()
 	m_SelectedEmote = -1;
 }
 
+void CEmoticon::OnRelease()
+{
+	m_Active = false;
+}
+
 void CEmoticon::OnMessage(int MsgType, void *pRawMsg)
 {
 }
@@ -45,7 +53,7 @@ bool CEmoticon::OnMouseMove(float x, float y)
 {
 	if(!m_Active)
 		return false;
-	
+
 	m_SelectorMouse += vec2(x,y);
 	return true;
 }
@@ -82,7 +90,7 @@ void CEmoticon::DrawCircle(float x, float y, float r, int Segments)
 		m_pClient->Graphics()->QuadsDrawFreeform(Array, NumItems);
 }
 
-	
+
 void CEmoticon::OnRender()
 {
 	if(!m_Active)
@@ -92,14 +100,8 @@ void CEmoticon::OnRender()
 		m_WasActive = false;
 		return;
 	}
-	
-	m_WasActive = true;
-	
-	int x, y;
-	Input()->MouseRelative(&x, &y);
 
-	m_SelectorMouse.x += x;
-	m_SelectorMouse.y += y;
+	m_WasActive = true;
 
 	if (length(m_SelectorMouse) > 140)
 		m_SelectorMouse = normalize(m_SelectorMouse) * 140;
@@ -109,9 +111,9 @@ void CEmoticon::OnRender()
 		SelectedAngle += 2*pi;
 
 	if (length(m_SelectorMouse) > 100)
-		m_SelectedEmote = (int)(SelectedAngle / (2*pi) * 12.0f);
+		m_SelectedEmote = (int)(SelectedAngle / (2*pi) * NUM_EMOTICONS);
 
-    CUIRect Screen = *UI()->Screen();
+	CUIRect Screen = *UI()->Screen();
 
 	Graphics()->MapScreen(Screen.x, Screen.y, Screen.w, Screen.h);
 
@@ -126,15 +128,15 @@ void CEmoticon::OnRender()
 	Graphics()->TextureSet(g_pData->m_aImages[IMAGE_EMOTICONS].m_Id);
 	Graphics()->QuadsBegin();
 
-	for (int i = 0; i < 12; i++)
+	for (int i = 0; i < NUM_EMOTICONS; i++)
 	{
-		float Angle = 2*pi*i/12.0;
+		float Angle = 2*pi*i/NUM_EMOTICONS;
 		if (Angle > pi)
 			Angle -= 2*pi;
 
 		bool Selected = m_SelectedEmote == i;
 
-		float Size = Selected ? 96 : 64;
+		float Size = Selected ? 80 : 32;
 
 		float NudgeX = 120 * cosf(Angle);
 		float NudgeY = 120 * sinf(Angle);
@@ -145,12 +147,12 @@ void CEmoticon::OnRender()
 
 	Graphics()->QuadsEnd();
 
-    Graphics()->TextureSet(g_pData->m_aImages[IMAGE_CURSOR].m_Id);
-    Graphics()->QuadsBegin();
-    Graphics()->SetColor(1,1,1,1);
+	Graphics()->TextureSet(g_pData->m_aImages[IMAGE_CURSOR].m_Id);
+	Graphics()->QuadsBegin();
+	Graphics()->SetColor(1,1,1,1);
 	IGraphics::CQuadItem QuadItem(m_SelectorMouse.x+Screen.w/2,m_SelectorMouse.y+Screen.h/2,24,24);
 	Graphics()->QuadsDrawTL(&QuadItem, 1);
-    Graphics()->QuadsEnd();
+	Graphics()->QuadsEnd();
 }
 
 void CEmoticon::Emote(int Emoticon)

@@ -1,10 +1,12 @@
+/* (c) Magnus Auvinen. See licence.txt in the root of the distribution for more information. */
+/* If you are missing that file, acquire a complete release at teeworlds.com.                */
 #include <game/generated/protocol.h>
 #include <game/server/gamecontext.h>
 #include "projectile.h"
 
 CProjectile::CProjectile(CGameWorld *pGameWorld, int Type, int Owner, vec2 Pos, vec2 Dir, int Span,
 		int Damage, bool Explosive, float Force, int SoundImpact, int Weapon)
-: CEntity(pGameWorld, NETOBJTYPE_PROJECTILE)
+: CEntity(pGameWorld, CGameWorld::ENTTYPE_PROJECTILE)
 {
 	m_Type = Type;
 	m_Pos = Pos;
@@ -30,25 +32,25 @@ vec2 CProjectile::GetPos(float Time)
 {
 	float Curvature = 0;
 	float Speed = 0;
-	
+
 	switch(m_Type)
 	{
 		case WEAPON_GRENADE:
 			Curvature = GameServer()->Tuning()->m_GrenadeCurvature;
 			Speed = GameServer()->Tuning()->m_GrenadeSpeed;
 			break;
-			
+
 		case WEAPON_SHOTGUN:
 			Curvature = GameServer()->Tuning()->m_ShotgunCurvature;
 			Speed = GameServer()->Tuning()->m_ShotgunSpeed;
 			break;
-			
+
 		case WEAPON_GUN:
 			Curvature = GameServer()->Tuning()->m_GunCurvature;
 			Speed = GameServer()->Tuning()->m_GunSpeed;
 			break;
 	}
-	
+
 	return CalcPos(m_Pos, m_Direction, Curvature, Speed, Time);
 }
 
@@ -64,15 +66,15 @@ void CProjectile::Tick()
 	CCharacter *TargetChr = GameServer()->m_World.IntersectCharacter(PrevPos, CurPos, 6.0f, CurPos, OwnerChar);
 
 	m_LifeSpan--;
-	
-	if(TargetChr || Collide || m_LifeSpan < 0)
+
+	if(TargetChr || Collide || m_LifeSpan < 0 || GameLayerClipped(CurPos))
 	{
 		if(m_LifeSpan >= 0 || m_Weapon == WEAPON_GRENADE)
 			GameServer()->CreateSound(CurPos, m_SoundImpact);
 
 		if(m_Explosive)
 			GameServer()->CreateExplosion(CurPos, m_Owner, m_Weapon, false);
-			
+
 		else if(TargetChr)
 			TargetChr->TakeDamage(m_Direction * max(0.001f, m_Force), m_Damage, m_Owner, m_Weapon);
 
@@ -93,10 +95,11 @@ void CProjectile::FillInfo(CNetObj_Projectile *pProj)
 void CProjectile::Snap(int SnappingClient)
 {
 	float Ct = (Server()->Tick()-m_StartTick)/(float)Server()->TickSpeed();
-	
+
 	if(NetworkClipped(SnappingClient, GetPos(Ct)))
 		return;
 
-	CNetObj_Projectile *pProj = static_cast<CNetObj_Projectile *>(Server()->SnapNewItem(NETOBJTYPE_PROJECTILE, m_Id, sizeof(CNetObj_Projectile)));
-	FillInfo(pProj);
+	CNetObj_Projectile *pProj = static_cast<CNetObj_Projectile *>(Server()->SnapNewItem(NETOBJTYPE_PROJECTILE, m_ID, sizeof(CNetObj_Projectile)));
+	if(pProj)
+		FillInfo(pProj);
 }

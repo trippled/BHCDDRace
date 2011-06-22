@@ -1,4 +1,5 @@
-/* copyright (c) 2007 magnus auvinen, see licence.txt for more info */
+/* (c) Magnus Auvinen. See licence.txt in the root of the distribution for more information. */
+/* If you are missing that file, acquire a complete release at teeworlds.com.                */
 #ifndef BASE_MATH_H
 #define BASE_MATH_H
 
@@ -37,6 +38,17 @@ inline float frandom() { return rand()/(float)(RAND_MAX); }
 // float to fixed
 inline int f2fx(float v) { return (int)(v*(float)(1<<10)); }
 inline float fx2f(int v) { return v*(1.0f/(1<<10)); }
+
+inline int gcd(int a, int b)
+{
+	while(b != 0)
+	{
+		int c = a % b;
+		a = b;
+		b = c;
+	}
+	return a;
+}
 
 class fxp
 {

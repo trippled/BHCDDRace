@@ -1,4 +1,5 @@
-// copyright (c) 2007 magnus auvinen, see licence.txt for more info
+/* (c) Magnus Auvinen. See licence.txt in the root of the distribution for more information. */
+/* If you are missing that file, acquire a complete release at teeworlds.com.                */
 #include <base/system.h>
 #include "memheap.h"
 
@@ -9,7 +10,7 @@ void CHeap::NewChunk()
 {
 	CChunk *pChunk;
 	char *pMem;
-	
+
 	// allocate memory
 	pMem = (char*)mem_alloc(sizeof(CChunk)+CHUNK_SIZE, 1);
 	if(!pMem)
@@ -24,14 +25,14 @@ void CHeap::NewChunk()
 	pChunk->m_pNext = (CChunk *)0x0;
 
 	pChunk->m_pNext = m_pCurrent;
-	m_pCurrent = pChunk;	
+	m_pCurrent = pChunk;
 }
 
 //****************
 void *CHeap::AllocateFromChunk(unsigned int Size)
 {
 	char *pMem;
-	
+
 	// check if we need can fit the allocation
 	if(m_pCurrent->m_pCurrent + Size > m_pCurrent->m_pEnd)
 		return (void*)0x0;
@@ -65,14 +66,14 @@ void CHeap::Clear()
 {
 	CChunk *pChunk = m_pCurrent;
 	CChunk *pNext;
-	
+
 	while(pChunk)
 	{
 		pNext = pChunk->m_pNext;
 		mem_free(pChunk);
 		pChunk = pNext;
 	}
-	
+
 	m_pCurrent = 0x0;
 }
 
@@ -87,10 +88,10 @@ void *CHeap::Allocate(unsigned Size)
 	{
 		// allocate new chunk and add it to the heap
 		NewChunk();
-		
+
 		// try to allocate again
 		pMem = (char *)AllocateFromChunk(Size);
 	}
-	
+
 	return pMem;
 }

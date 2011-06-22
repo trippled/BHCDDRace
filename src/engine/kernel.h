@@ -1,3 +1,5 @@
+/* (c) Magnus Auvinen. See licence.txt in the root of the distribution for more information. */
+/* If you are missing that file, acquire a complete release at teeworlds.com.                */
 #ifndef ENGINE_KERNEL_H
 #define ENGINE_KERNEL_H
 
@@ -16,7 +18,7 @@ protected:
 public:
 	IInterface() : m_pKernel(0) {}
 	virtual ~IInterface() {}
-	
+
 	//virtual unsigned InterfaceID() = 0;
 	//virtual const char *InterfaceName() = 0;
 };
@@ -25,7 +27,7 @@ public:
 	public: \
 		static const char *InterfaceName() { return Name; } \
 	private:
-	
+
 		//virtual unsigned InterfaceID() { return INTERFACE_ID; }
 		//virtual const char *InterfaceName() { return name; }
 
@@ -53,7 +55,7 @@ public:
 	{
 		return ReregisterInterfaceImpl(TINTERFACE::InterfaceName(), pInterface);
 	}
-	
+
 	// Usage example:
 	//		IMyInterface *pMyHandle = Kernel()->RequestInterface<IMyInterface>()
 	template<class TINTERFACE>

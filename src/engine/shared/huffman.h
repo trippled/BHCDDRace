@@ -1,3 +1,5 @@
+/* (c) Magnus Auvinen. See licence.txt in the root of the distribution for more information. */
+/* If you are missing that file, acquire a complete release at teeworlds.com.                */
 #ifndef ENGINE_SHARED_HUFFMAN_H
 #define ENGINE_SHARED_HUFFMAN_H
 
@@ -11,7 +13,7 @@ class CHuffman
 
 		HUFFMAN_MAX_SYMBOLS=HUFFMAN_EOF_SYMBOL+1,
 		HUFFMAN_MAX_NODES=HUFFMAN_MAX_SYMBOLS*2-1,
-		
+
 		HUFFMAN_LUTBITS = 10,
 		HUFFMAN_LUTSIZE = (1<<HUFFMAN_LUTBITS),
 		HUFFMAN_LUTMASK = (HUFFMAN_LUTSIZE-1)
@@ -34,10 +36,10 @@ class CHuffman
 	CNode *m_apDecodeLut[HUFFMAN_LUTSIZE];
 	CNode *m_pStartNode;
 	int m_NumNodes;
-	
-	void Setbits_r(CNode *pNode, int Bits, int Depth);
+
+	void Setbits_r(CNode *pNode, int Bits, unsigned Depth);
 	void ConstructTree(const unsigned *pFrequencies);
-	
+
 public:
 	/*
 		Function: huffman_init
@@ -84,6 +86,6 @@ public:
 			Returns the size of the uncompressed data. Negative value on failure.
 	*/
 	int Decompress(const void *pInput, int InputSize, void *pOutput, int OutputSize);
-	
+
 };
 #endif // __HUFFMAN_HEADER__

@@ -1,11 +1,12 @@
-// copyright (c) 2007 magnus auvinen, see licence.txt for more info
+/* (c) Magnus Auvinen. See licence.txt in the root of the distribution for more information. */
+/* If you are missing that file, acquire a complete release at teeworlds.com.                */
 #include <base/system.h>
 
 #include "compression.h"
 
-// Format: ESDDDDDD EDDDDDDD EDD...  Extended, Data, Sign
-unsigned char *CVariableInt::Pack(unsigned char *pDst, int i) 
-{ 
+// Format: ESDDDDDD EDDDDDDD EDD... Extended, Data, Sign
+unsigned char *CVariableInt::Pack(unsigned char *pDst, int i)
+{
 	*pDst = (i>>25)&0x40; // set sign bit if i<0
 	i = i^(i>>31); // if(i<0) i = ~i
 
@@ -26,16 +27,16 @@ unsigned char *CVariableInt::Pack(unsigned char *pDst, int i)
 	}
 
 	pDst++;
-	return pDst; 
-} 
- 
+	return pDst;
+}
+
 const unsigned char *CVariableInt::Unpack(const unsigned char *pSrc, int *pInOut)
-{ 
-	int Sign = (*pSrc>>6)&1; 
-	*pInOut = *pSrc&0x3F; 
+{
+	int Sign = (*pSrc>>6)&1;
+	*pInOut = *pSrc&0x3F;
 
 	do
-	{ 
+	{
 		if(!(*pSrc&0x80)) break;
 		pSrc++;
 		*pInOut |= (*pSrc&(0x7F))<<(6);
@@ -55,8 +56,8 @@ const unsigned char *CVariableInt::Unpack(const unsigned char *pSrc, int *pInOut
 
 	pSrc++;
 	*pInOut ^= -Sign; // if(sign) *i = ~(*i)
-	return pSrc; 
-} 
+	return pSrc;
+}
 
 
 long CVariableInt::Decompress(const void *pSrc_, int Size, void *pDst_)

@@ -1,3 +1,5 @@
+/* (c) Magnus Auvinen. See licence.txt in the root of the distribution for more information. */
+/* If you are missing that file, acquire a complete release at teeworlds.com.                */
 #ifndef GAME_CLIENT_LINEINPUT_H
 #define GAME_CLIENT_LINEINPUT_H
 
@@ -25,7 +27,8 @@ public:
 	void Set(const char *pString);
 	const char *GetString() const { return m_Str; }
 	int GetLength() const { return m_Len; }
-	unsigned GetCursorOffset() const { return m_CursorPos; }
+	int GetCursorOffset() const { return m_CursorPos; }
+	void SetCursorOffset(int Offset) { m_CursorPos = Offset > m_Len ? m_Len : Offset < 0 ? 0 : Offset; }
 };
 
 #endif

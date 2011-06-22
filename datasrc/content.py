@@ -3,13 +3,13 @@ from datatypes import *
 
 class Sound(Struct):
 	def __init__(self, filename=""):
-		Struct.__init__(self, "SOUND")
+		Struct.__init__(self, "CDataSound")
 		self.id = Int(0)
 		self.filename = String(filename)
 
 class SoundSet(Struct):
 	def __init__(self, name="", files=[]):
-		Struct.__init__(self, "SOUNDSET")
+		Struct.__init__(self, "CDataSoundset")
 		self.name = String(name)
 		self.sounds = Array(Sound())
 		self.last = Int(-1)
@@ -18,21 +18,21 @@ class SoundSet(Struct):
 
 class Image(Struct):
 	def __init__(self, name="", filename=""):
-		Struct.__init__(self, "IMAGE")
+		Struct.__init__(self, "CDataImage")
 		self.name = String(name)
 		self.filename = String(filename)
 		self.id = Int(-1)
-	
+
 class SpriteSet(Struct):
 	def __init__(self, name="", image=None, gridx=0, gridy=0):
-		Struct.__init__(self, "SPRITESET")
+		Struct.__init__(self, "CDataSpriteset")
 		self.image = Pointer(Image, image) # TODO
 		self.gridx = Int(gridx)
 		self.gridy = Int(gridy)
 
 class Sprite(Struct):
 	def __init__(self, name="", Set=None, x=0, y=0, w=0, h=0):
-		Struct.__init__(self, "SPRITE")
+		Struct.__init__(self, "CDataSprite")
 		self.name = String(name)
 		self.set = Pointer(SpriteSet, Set) # TODO
 		self.x = Int(x)
@@ -42,14 +42,14 @@ class Sprite(Struct):
 
 class Pickup(Struct):
 	def __init__(self, name="", respawntime=15, spawndelay=0):
-		Struct.__init__(self, "PICKUPSPEC")
+		Struct.__init__(self, "CDataPickupspec")
 		self.name = String(name)
 		self.respawntime = Int(respawntime)
 		self.spawndelay = Int(spawndelay)
 
 class AnimKeyframe(Struct):
 	def __init__(self, time=0, x=0, y=0, angle=0):
-		Struct.__init__(self, "ANIM_KEYFRAME")
+		Struct.__init__(self, "CAnimKeyframe")
 		self.time = Float(time)
 		self.x = Float(x)
 		self.y = Float(y)
@@ -57,12 +57,12 @@ class AnimKeyframe(Struct):
 
 class AnimSequence(Struct):
 	def __init__(self):
-		Struct.__init__(self, "ANIM_SEQUENCE")
+		Struct.__init__(self, "CAnimSequence")
 		self.frames = Array(AnimKeyframe())
 
 class Animation(Struct):
 	def __init__(self, name=""):
-		Struct.__init__(self, "ANIMATION")
+		Struct.__init__(self, "CAnimation")
 		self.name = String(name)
 		self.body = AnimSequence()
 		self.back_foot = AnimSequence()
@@ -71,14 +71,14 @@ class Animation(Struct):
 
 class WeaponSpec(Struct):
 	def __init__(self, container=None, name=""):
-		Struct.__init__(self, "WEAPONSPEC")
+		Struct.__init__(self, "CDataWeaponspec")
 		self.name = String(name)
 		self.sprite_body = Pointer(Sprite, Sprite())
 		self.sprite_cursor = Pointer(Sprite, Sprite())
 		self.sprite_proj = Pointer(Sprite, Sprite())
 		self.sprite_muzzles = Array(Pointer(Sprite, Sprite()))
 		self.visual_size = Int(96)
-		
+
 		self.firedelay = Int(500)
 		self.maxammo = Int(10)
 		self.ammoregentime = Int(0)
@@ -101,29 +101,29 @@ class WeaponSpec(Struct):
 
 class Weapon_Hammer(Struct):
 	def __init__(self):
-		Struct.__init__(self, "WEAPONSPEC_HAMMER")
+		Struct.__init__(self, "CDataWeaponspecHammer")
 		self.base = Pointer(WeaponSpec, WeaponSpec())
 
 class Weapon_Gun(Struct):
 	def __init__(self):
-		Struct.__init__(self, "WEAPONSPEC_GUN")
+		Struct.__init__(self, "CDataWeaponspecGun")
 		self.base = Pointer(WeaponSpec, WeaponSpec())
 		self.curvature = Float(1.25)
 		self.speed = Float(2200)
 		self.lifetime = Float(2.0)
-		
+
 class Weapon_Shotgun(Struct):
 	def __init__(self):
-		Struct.__init__(self, "WEAPONSPEC_SHOTGUN")
+		Struct.__init__(self, "CDataWeaponspecShotgun")
 		self.base = Pointer(WeaponSpec, WeaponSpec())
 		self.curvature = Float(1.25)
 		self.speed = Float(2200)
 		self.speeddiff = Float(0.8)
-		self.lifetime = Float(0.25)		
+		self.lifetime = Float(0.25)
 
 class Weapon_Grenade(Struct):
 	def __init__(self):
-		Struct.__init__(self, "WEAPONSPEC_GRENADE")
+		Struct.__init__(self, "CDataWeaponspecGrenade")
 		self.base = Pointer(WeaponSpec, WeaponSpec())
 		self.curvature = Float(7.0)
 		self.speed = Float(1000)
@@ -131,16 +131,16 @@ class Weapon_Grenade(Struct):
 
 class Weapon_Rifle(Struct):
 	def __init__(self):
-		Struct.__init__(self, "WEAPONSPEC_RIFLE")
+		Struct.__init__(self, "CDataWeaponspecRifle")
 		self.base = Pointer(WeaponSpec, WeaponSpec())
 		self.reach = Float(800.0)
 		self.bounce_delay = Int(150)
 		self.bounce_num = Int(1)
 		self.bounce_cost = Float(0)
-		
+
 class Weapon_Ninja(Struct):
 	def __init__(self):
-		Struct.__init__(self, "WEAPONSPEC_NINJA")
+		Struct.__init__(self, "CDataWeaponspecNinja")
 		self.base = Pointer(WeaponSpec, WeaponSpec())
 		self.duration = Int(15000)
 		self.movetime = Int(200)
@@ -148,9 +148,9 @@ class Weapon_Ninja(Struct):
 
 class Weapons(Struct):
 	def __init__(self):
-		Struct.__init__(self, "WEAPONSPECS")
+		Struct.__init__(self, "CDataWeaponspecs")
 		self.hammer = Weapon_Hammer()
-		self.gun = Weapon_Hammer()
+		self.gun = Weapon_Gun()
 		self.shotgun = Weapon_Shotgun()
 		self.grenade = Weapon_Grenade()
 		self.rifle = Weapon_Rifle()
@@ -159,7 +159,7 @@ class Weapons(Struct):
 
 class DataContainer(Struct):
 	def __init__(self):
-		Struct.__init__(self, "DATACONTAINER")
+		Struct.__init__(self, "CDataContainer")
 		self.sounds = Array(SoundSet())
 		self.images = Array(Image())
 		self.pickups = Array(Pickup())
@@ -169,7 +169,7 @@ class DataContainer(Struct):
 		self.weapons = Weapons()
 
 def FileList(format, num):
-	return [format%(x+1) for x in xrange(0,num)]
+	return [format%(x+1) for x in range(0,num)]
 
 container = DataContainer()
 container.sounds.Add(SoundSet("gun_fire", FileList("audio/wp_gun_fire-%02d.wv", 3)))
@@ -190,7 +190,7 @@ container.sounds.Add(SoundSet("player_pain_long", FileList("audio/vo_teefault_pa
 
 container.sounds.Add(SoundSet("body_land", FileList("audio/foley_land-%02d.wv", 4)))
 container.sounds.Add(SoundSet("player_airjump", FileList("audio/foley_dbljump-%02d.wv", 3)))
-container.sounds.Add(SoundSet("player_jump", FileList("audio/foley_foot_left-%02d.wv", 4) +  FileList("audio/foley_foot_right-%02d.wv", 4)))
+container.sounds.Add(SoundSet("player_jump", FileList("audio/foley_foot_left-%02d.wv", 4) + FileList("audio/foley_foot_right-%02d.wv", 4)))
 container.sounds.Add(SoundSet("player_die", FileList("audio/foley_body_splat-%02d.wv", 3)))
 container.sounds.Add(SoundSet("player_spawn", FileList("audio/vo_teefault_spawn-%02d.wv", 7)))
 container.sounds.Add(SoundSet("player_skid", FileList("audio/sfx_skid-%02d.wv", 4)))
@@ -214,17 +214,24 @@ container.sounds.Add(SoundSet("hit", FileList("audio/sfx_hit_weak-%02d.wv", 2)))
 
 container.sounds.Add(SoundSet("chat_server", ["audio/sfx_msg-server.wv"]))
 container.sounds.Add(SoundSet("chat_client", ["audio/sfx_msg-client.wv"]))
+container.sounds.Add(SoundSet("chat_highlight", ["audio/sfx_msg-highlight.wv"]))
 container.sounds.Add(SoundSet("ctf_drop", ["audio/sfx_ctf_drop.wv"]))
 container.sounds.Add(SoundSet("ctf_return", ["audio/sfx_ctf_rtn.wv"]))
 container.sounds.Add(SoundSet("ctf_grab_pl", ["audio/sfx_ctf_grab_pl.wv"]))
 container.sounds.Add(SoundSet("ctf_grab_en", ["audio/sfx_ctf_grab_en.wv"]))
 container.sounds.Add(SoundSet("ctf_capture", ["audio/sfx_ctf_cap_pl.wv"]))
 
+container.sounds.Add(SoundSet("menu", ["audio/music_menu.wv"]))
+
 image_null = Image("null", "")
 image_particles = Image("particles", "particles.png")
 image_game = Image("game", "game.png")
 image_browseicons = Image("browseicons", "browse_icons.png")
 image_emoticons = Image("emoticons", "emoticons.png")
+image_demobuttons = Image("demobuttons", "demo_buttons.png")
+image_fileicons = Image("fileicons", "file_icons.png")
+image_guibuttons = Image("guibuttons", "gui_buttons.png")
+image_guiicons = Image("guiicons", "gui_icons.png")
 
 container.images.Add(image_null)
 container.images.Add(image_game)
@@ -235,6 +242,10 @@ container.images.Add(image_emoticons)
 container.images.Add(image_browseicons)
 container.images.Add(Image("console_bg", "console.png"))
 container.images.Add(Image("console_bar", "console_bar.png"))
+container.images.Add(image_demobuttons)
+container.images.Add(image_fileicons)
+container.images.Add(image_guibuttons)
+container.images.Add(image_guiicons)
 
 container.pickups.Add(Pickup("health"))
 container.pickups.Add(Pickup("armor"))
@@ -246,12 +257,20 @@ set_game = SpriteSet("game", image_game, 32, 16)
 set_tee = SpriteSet("tee", image_null, 8, 4)
 set_browseicons = SpriteSet("browseicons", image_browseicons, 4, 1)
 set_emoticons = SpriteSet("emoticons", image_emoticons, 4, 4)
+set_demobuttons = SpriteSet("demobuttons", image_demobuttons, 5, 1)
+set_fileicons = SpriteSet("fileicons", image_fileicons, 8, 1)
+set_guibuttons = SpriteSet("guibuttons", image_guibuttons, 12, 4)
+set_guiicons = SpriteSet("guiicons", image_guiicons, 8, 2)
 
 container.spritesets.Add(set_particles)
 container.spritesets.Add(set_game)
 container.spritesets.Add(set_tee)
 container.spritesets.Add(set_browseicons)
 container.spritesets.Add(set_emoticons)
+container.spritesets.Add(set_demobuttons)
+container.spritesets.Add(set_fileicons)
+container.spritesets.Add(set_guibuttons)
+container.spritesets.Add(set_guiicons)
 
 container.sprites.Add(Sprite("part_slice", set_particles, 0,0,1,1))
 container.sprites.Add(Sprite("part_ball", set_particles, 1,0,1,1))
@@ -263,6 +282,7 @@ container.sprites.Add(Sprite("part_smoke", set_particles, 0,1,1,1))
 container.sprites.Add(Sprite("part_shell", set_particles, 0,2,2,2))
 container.sprites.Add(Sprite("part_expl01", set_particles, 0,4,4,4))
 container.sprites.Add(Sprite("part_airjump", set_particles, 2,2,2,2))
+container.sprites.Add(Sprite("part_hit01", set_particles, 4,1,2,2))
 
 container.sprites.Add(Sprite("health_full", set_game, 21,0,2,2))
 container.sprites.Add(Sprite("health_empty", set_game, 23,0,2,2))
@@ -272,7 +292,7 @@ container.sprites.Add(Sprite("armor_empty", set_game, 23,2,2,2))
 container.sprites.Add(Sprite("star1", set_game, 15,0,2,2))
 container.sprites.Add(Sprite("star2", set_game, 17,0,2,2))
 container.sprites.Add(Sprite("star3", set_game, 19,0,2,2))
-	
+
 container.sprites.Add(Sprite("part1", set_game, 6,0,1,1))
 container.sprites.Add(Sprite("part2", set_game, 6,1,1,1))
 container.sprites.Add(Sprite("part3", set_game, 7,0,1,1))
@@ -346,22 +366,40 @@ container.sprites.Add(Sprite("exclamation", set_emoticons, 1, 0, 1, 1))
 container.sprites.Add(Sprite("hearts", set_emoticons, 2, 0, 1, 1))
 container.sprites.Add(Sprite("drop", set_emoticons, 3, 0, 1, 1))
 container.sprites.Add(Sprite("dotdot", set_emoticons, 0, 1, 1, 1))
-container.sprites.Add(Sprite("music1", set_emoticons, 1, 1, 1, 1))
-container.sprites.Add(Sprite("music2", set_emoticons, 2, 1, 1, 1))
+container.sprites.Add(Sprite("music", set_emoticons, 1, 1, 1, 1))
+container.sprites.Add(Sprite("sorry", set_emoticons, 2, 1, 1, 1))
 container.sprites.Add(Sprite("ghost", set_emoticons, 3, 1, 1, 1))
 container.sprites.Add(Sprite("sushi", set_emoticons, 0, 2, 1, 1))
 container.sprites.Add(Sprite("splattee", set_emoticons, 1, 2, 1, 1))
 container.sprites.Add(Sprite("deviltee", set_emoticons, 2, 2, 1, 1))
 container.sprites.Add(Sprite("zomg", set_emoticons, 3, 2, 1, 1))
 container.sprites.Add(Sprite("zzz", set_emoticons, 0, 3, 1, 1))
-container.sprites.Add(Sprite("blank1", set_emoticons, 1, 3, 1, 1))
-container.sprites.Add(Sprite("deadtee", set_emoticons, 2, 3, 1, 1))
-container.sprites.Add(Sprite("blank2", set_emoticons, 3, 3, 1, 1))
-
+container.sprites.Add(Sprite("wtf", set_emoticons, 1, 3, 1, 1))
+container.sprites.Add(Sprite("eyes", set_emoticons, 2, 3, 1, 1))
+container.sprites.Add(Sprite("question", set_emoticons, 3, 3, 1, 1))
 
 container.sprites.Add(Sprite("browse_lock", set_browseicons, 0,0,1,1))
 container.sprites.Add(Sprite("browse_heart", set_browseicons, 1,0,1,1))
 container.sprites.Add(Sprite("browse_unpure", set_browseicons, 3,0,1,1))
+
+container.sprites.Add(Sprite("demobutton_play", set_demobuttons, 0,0,1,1))
+container.sprites.Add(Sprite("demobutton_pause", set_demobuttons, 1,0,1,1))
+container.sprites.Add(Sprite("demobutton_stop", set_demobuttons, 2,0,1,1))
+container.sprites.Add(Sprite("demobutton_slower", set_demobuttons, 3,0,1,1))
+container.sprites.Add(Sprite("demobutton_faster", set_demobuttons, 4,0,1,1))
+
+container.sprites.Add(Sprite("file_demo1", set_fileicons, 0,0,1,1))
+container.sprites.Add(Sprite("file_demo2", set_fileicons, 1,0,1,1))
+container.sprites.Add(Sprite("file_folder", set_fileicons, 2,0,1,1))
+container.sprites.Add(Sprite("file_map1", set_fileicons, 5,0,1,1))
+container.sprites.Add(Sprite("file_map2", set_fileicons, 6,0,1,1))
+
+container.sprites.Add(Sprite("guibutton_off", set_guibuttons, 0,0,4,4))
+container.sprites.Add(Sprite("guibutton_on", set_guibuttons, 4,0,4,4))
+container.sprites.Add(Sprite("guibutton_hover", set_guibuttons, 8,0,4,4))
+
+container.sprites.Add(Sprite("guiicon_mute", set_guiicons, 0,0,4,2))
+container.sprites.Add(Sprite("guiicon_friend", set_guiicons, 4,0,4,2))
 
 anim = Animation("base")
 anim.body.frames.Add(AnimKeyframe(0, 0, -4, 0))
@@ -387,35 +425,35 @@ anim.body.frames.Add(AnimKeyframe(0.6, 0, 0, 0))
 anim.body.frames.Add(AnimKeyframe(0.8, 0,-1, 0))
 anim.body.frames.Add(AnimKeyframe(1.0, 0, 0, 0))
 
-anim.back_foot.frames.Add(AnimKeyframe(0.0,  8, 0, 0))
+anim.back_foot.frames.Add(AnimKeyframe(0.0, 8, 0, 0))
 anim.back_foot.frames.Add(AnimKeyframe(0.2, -8, 0, 0))
 anim.back_foot.frames.Add(AnimKeyframe(0.4,-10,-4, 0.2))
 anim.back_foot.frames.Add(AnimKeyframe(0.6, -8,-8, 0.3))
-anim.back_foot.frames.Add(AnimKeyframe(0.8,  4,-4,-0.2))
-anim.back_foot.frames.Add(AnimKeyframe(1.0,  8, 0, 0))
+anim.back_foot.frames.Add(AnimKeyframe(0.8, 4,-4,-0.2))
+anim.back_foot.frames.Add(AnimKeyframe(1.0, 8, 0, 0))
 
 anim.front_foot.frames.Add(AnimKeyframe(0.0,-10,-4, 0.2))
 anim.front_foot.frames.Add(AnimKeyframe(0.2, -8,-8, 0.3))
-anim.front_foot.frames.Add(AnimKeyframe(0.4,  4,-4,-0.2))
-anim.front_foot.frames.Add(AnimKeyframe(0.6,  8, 0, 0))
-anim.front_foot.frames.Add(AnimKeyframe(0.8,  8, 0, 0))
+anim.front_foot.frames.Add(AnimKeyframe(0.4, 4,-4,-0.2))
+anim.front_foot.frames.Add(AnimKeyframe(0.6, 8, 0, 0))
+anim.front_foot.frames.Add(AnimKeyframe(0.8, 8, 0, 0))
 anim.front_foot.frames.Add(AnimKeyframe(1.0,-10,-4, 0.2))
 container.animations.Add(anim)
 
 anim = Animation("hammer_swing")
 anim.attach.frames.Add(AnimKeyframe(0.0, 0, 0, -0.10))
-anim.attach.frames.Add(AnimKeyframe(0.3, 0, 0,  0.25))
-anim.attach.frames.Add(AnimKeyframe(0.4, 0, 0,  0.30))
-anim.attach.frames.Add(AnimKeyframe(0.5, 0, 0,  0.25))
+anim.attach.frames.Add(AnimKeyframe(0.3, 0, 0, 0.25))
+anim.attach.frames.Add(AnimKeyframe(0.4, 0, 0, 0.30))
+anim.attach.frames.Add(AnimKeyframe(0.5, 0, 0, 0.25))
 anim.attach.frames.Add(AnimKeyframe(1.0, 0, 0, -0.10))
 container.animations.Add(anim)
-			
+
 anim = Animation("ninja_swing")
 anim.attach.frames.Add(AnimKeyframe(0.00, 0, 0, -0.25))
 anim.attach.frames.Add(AnimKeyframe(0.10, 0, 0, -0.05))
-anim.attach.frames.Add(AnimKeyframe(0.15, 0, 0,  0.35))
-anim.attach.frames.Add(AnimKeyframe(0.42, 0, 0,  0.40))
-anim.attach.frames.Add(AnimKeyframe(0.50, 0, 0,  0.35))
+anim.attach.frames.Add(AnimKeyframe(0.15, 0, 0, 0.35))
+anim.attach.frames.Add(AnimKeyframe(0.42, 0, 0, 0.40))
+anim.attach.frames.Add(AnimKeyframe(0.50, 0, 0, 0.35))
 anim.attach.frames.Add(AnimKeyframe(1.00, 0, 0, -0.25))
 container.animations.Add(anim)
 

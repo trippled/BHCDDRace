@@ -1,13 +1,21 @@
+/* (c) Magnus Auvinen. See licence.txt in the root of the distribution for more information. */
+/* If you are missing that file, acquire a complete release at teeworlds.com.                */
 #include <base/system.h>
 #include "network.h"
 
 bool CNetClient::Open(NETADDR BindAddr, int Flags)
 {
+	// open socket
+	NETSOCKET Socket;
+	Socket = net_udp_create(BindAddr);
+	if(!Socket.type)
+		return false;
+
 	// clean it
 	mem_zero(this, sizeof(*this));
 
-	// open socket
-	m_Socket = net_udp_create(BindAddr);
+	// init
+	m_Socket = Socket;
 	m_Connection.Init(m_Socket);
 	return true;
 }
@@ -21,7 +29,7 @@ int CNetClient::Close()
 
 int CNetClient::Disconnect(const char *pReason)
 {
-	dbg_msg("netclient", "disconnected. reason=\"%s\"", pReason);
+	//dbg_msg("netclient", "disconnected. reason=\"%s\"", pReason);
 	m_Connection.Disconnect(pReason);
 	return 0;
 }
@@ -53,7 +61,7 @@ int CNetClient::Recv(CNetChunk *pChunk)
 		// check for a chunk
 		if(m_RecvUnpacker.FetchChunk(pChunk))
 			return 1;
-		
+
 		// TODO: empty the recvinfo
 		NETADDR Addr;
 		int Bytes = net_udp_recv(m_Socket, &Addr, m_RecvUnpacker.m_aBuffer, NET_MAX_PACKETSIZE);
@@ -90,7 +98,7 @@ int CNetClient::Send(CNetChunk *pChunk)
 		dbg_msg("netclient", "chunk payload too big. %d. dropping chunk", pChunk->m_DataSize);
 		return -1;
 	}
-	
+
 	if(pChunk->m_Flags&NETSENDFLAG_CONNLESS)
 	{
 		// send connectionless packet
@@ -100,10 +108,10 @@ int CNetClient::Send(CNetChunk *pChunk)
 	{
 		int Flags = 0;
 		dbg_assert(pChunk->m_ClientID == 0, "errornous client id");
-		
+
 		if(pChunk->m_Flags&NETSENDFLAG_VITAL)
 			Flags = NET_CHUNKFLAG_VITAL;
-		
+
 		m_Connection.QueueChunk(Flags, pChunk->m_DataSize, pChunk->m_pData);
 
 		if(pChunk->m_Flags&NETSENDFLAG_FLUSH)

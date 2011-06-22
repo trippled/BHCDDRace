@@ -1,3 +1,5 @@
+/* (c) Magnus Auvinen. See licence.txt in the root of the distribution for more information. */
+/* If you are missing that file, acquire a complete release at teeworlds.com.                */
 #include "eventhandler.h"
 #include "gamecontext.h"
 
@@ -44,11 +46,12 @@ void CEventHandler::Snap(int SnappingClient)
 	{
 		if(SnappingClient == -1 || CmaskIsSet(m_aClientMasks[i], SnappingClient))
 		{
-			NETEVENT_COMMON *ev = (NETEVENT_COMMON *)&m_aData[m_aOffsets[i]];
+			CNetEvent_Common *ev = (CNetEvent_Common *)&m_aData[m_aOffsets[i]];
 			if(SnappingClient == -1 || distance(GameServer()->m_apPlayers[SnappingClient]->m_ViewPos, vec2(ev->m_X, ev->m_Y)) < 1500.0f)
 			{
 				void *d = GameServer()->Server()->SnapNewItem(m_aTypes[i], i, m_aSizes[i]);
-				mem_copy(d, &m_aData[m_aOffsets[i]], m_aSizes[i]);
+				if(d)
+					mem_copy(d, &m_aData[m_aOffsets[i]], m_aSizes[i]);
 			}
 		}
 	}

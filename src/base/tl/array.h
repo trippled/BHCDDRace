@@ -1,5 +1,7 @@
-#ifndef TL_FILE_ARRAY_HPP
-#define TL_FILE_ARRAY_HPP
+/* (c) Magnus Auvinen. See licence.txt in the root of the distribution for more information. */
+/* If you are missing that file, acquire a complete release at teeworlds.com.                */
+#ifndef BASE_TL_ARRAY_H
+#define BASE_TL_ARRAY_H
 
 #include "range.h"
 #include "allocator.h"
@@ -8,10 +10,10 @@
 /*
 	Class: array
 		Normal dynamic array class
-	
+
 	Remarks:
 		- Grows 50% each time it needs to fit new items
-		- Use set_size() if you know how many elements 
+		- Use set_size() if you know how many elements
 		- Use optimize() to reduce the needed space.
 */
 template <class T, class ALLOCATOR = allocator_default<T> >
@@ -22,7 +24,7 @@ class array : private ALLOCATOR
 		list = 0x0;
 		clear();
 	}
-	
+
 public:
 	typedef plain_range<T> range;
 
@@ -33,7 +35,7 @@ public:
 	{
 		init();
 	}
-	
+
 	/*
 		Function: array copy constructor
 	*/
@@ -58,7 +60,7 @@ public:
 
 	/*
 		Function: delete_all
-		
+
 		Remarks:
 			- Invalidates ranges
 	*/
@@ -72,7 +74,7 @@ public:
 
 	/*
 		Function: clear
-	
+
 		Remarks:
 			- Invalidates ranges
 	*/
@@ -122,7 +124,7 @@ public:
 
 	/*
 		Function: remove_index
-		
+
 		Remarks:
 			- Invalidates ranges
 	*/
@@ -130,7 +132,7 @@ public:
 	{
 		for(int i = index+1; i < num_elements; i++)
 			list[i-1] = list[i];
-		
+
 		set_size(size()-1);
 	}
 
@@ -154,10 +156,10 @@ public:
 	/*
 		Function: add
 			Adds an item to the array.
-		
+
 		Arguments:
 			item - Item to add.
-			
+
 		Remarks:
 			- Invalidates ranges
 			- See remarks about <array> how the array grows.
@@ -173,9 +175,9 @@ public:
 	/*
 		Function: insert
 			Inserts an item into the array at a specified location.
-			
+
 		Arguments:
-			item - Item to insert.		
+			item - Item to insert.
 			r - Range where to insert the item
 
 		Remarks:
@@ -186,16 +188,16 @@ public:
 	{
 		if(r.empty())
 			return add(item);
-			
+
 		int index = (int)(&r.front()-list);
 		incsize();
 		set_size(size()+1);
-		
+
 		for(int i = num_elements-1; i > index; i--)
 			list[i] = list[i-1];
 
 		list[index] = item;
-		
+
 		return num_elements-1;
 	}
 
@@ -234,13 +236,14 @@ public:
 	/*
 		Function: set_size
 			Resizes the array to the specified size.
-			
+
 		Arguments:
 			new_size - The new size for the array.
 	*/
 	void set_size(int new_size)
 	{
-		alloc(new_size);
+		if(list_size < new_size)
+			alloc(new_size);
 		num_elements = new_size;
 	}
 
@@ -248,10 +251,10 @@ public:
 		Function: hint_size
 			Allocates the number of elements wanted but
 			does not increase the list size.
-			
+
 		Arguments:
 			hint - Size to allocate.
-			
+
 		Remarks:
 			- If the hint is smaller then the number of elements, nothing will be done.
 			- Invalidates ranges
@@ -299,7 +302,7 @@ public:
 			(*this)[i] = other[i];
 		return *this;
 	}
-	
+
 	/*
 		Function: all
 			Returns a range that contains the whole array.
@@ -315,18 +318,18 @@ protected:
 				alloc(list_size+1);
 			else
 				alloc(list_size+list_size/2);
-		}		
+		}
 	}
 
 	void alloc(int new_len)
 	{
 		list_size = new_len;
 		T *new_list = ALLOCATOR::alloc_array(list_size);
-		
+
 		int end = num_elements < list_size ? num_elements : list_size;
 		for(int i = 0; i < end; i++)
 			new_list[i] = list[i];
-		
+
 		ALLOCATOR::free_array(list);
 
 		num_elements = num_elements < list_size ? num_elements : list_size;

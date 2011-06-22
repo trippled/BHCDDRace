@@ -1,3 +1,5 @@
+/* (c) Magnus Auvinen. See licence.txt in the root of the distribution for more information. */
+/* If you are missing that file, acquire a complete release at teeworlds.com.                */
 #include <engine/shared/config.h>
 #include <engine/graphics.h>
 #include <engine/textrender.h>
@@ -17,27 +19,55 @@
 
 void CDebugHud::RenderNetCorrections()
 {
-	if(!g_Config.m_Debug || !m_pClient->m_Snap.m_pLocalCharacter || !m_pClient->m_Snap.m_pLocalPrevCharacter)
+	if(!g_Config.m_Debug || g_Config.m_DbgGraphs || !m_pClient->m_Snap.m_pLocalCharacter || !m_pClient->m_Snap.m_pLocalPrevCharacter)
 		return;
 
-	Graphics()->MapScreen(0, 0, 300*Graphics()->ScreenAspect(), 300);
-	
+	float Width = 300*Graphics()->ScreenAspect();
+	Graphics()->MapScreen(0, 0, Width, 300);
+
 	/*float speed = distance(vec2(netobjects.local_prev_character->x, netobjects.local_prev_character->y),
 		vec2(netobjects.local_character->x, netobjects.local_character->y));*/
 
-/*
-	float velspeed = length(vec2(gameclient.snap.local_character->m_VelX/256.0f, gameclient.snap.local_character->m_VelY/256.0f))*50;
-	
-	float ramp = velocity_ramp(velspeed, gameclient.tuning.velramp_start, gameclient.tuning.velramp_range, gameclient.tuning.velramp_curvature);
-	
-	char buf[512];
-	str_format(buf, sizeof(buf), "%.0f\n%.0f\n%.2f\n%d %s\n%d %d",
-		velspeed, velspeed*ramp, ramp,
-		netobj_num_corrections(), netobj_corrected_on(),
-		gameclient.snap.local_character->m_X,
-		gameclient.snap.local_character->m_Y
-	);
-	TextRender()->Text(0, 150, 50, 12, buf, -1);*/
+	float Velspeed = length(vec2(m_pClient->m_Snap.m_pLocalCharacter->m_VelX/256.0f, m_pClient->m_Snap.m_pLocalCharacter->m_VelY/256.0f))*50;
+	float Ramp = VelocityRamp(Velspeed, m_pClient->m_Tuning.m_VelrampStart, m_pClient->m_Tuning.m_VelrampRange, m_pClient->m_Tuning.m_VelrampCurvature);
+
+	const char *paStrings[] = {"velspeed:", "velspeed*ramp:", "ramp:", "Pos", " x:", " y:", "netobj corrections", " num:", " on:"};
+	const int Num = sizeof(paStrings)/sizeof(char *);
+	const float LineHeight = 6.0f;
+	const float Fontsize = 5.0f;
+
+	float x = Width-100.0f, y = 50.0f;
+	for(int i = 0; i < Num; ++i)
+		TextRender()->Text(0, x, y+i*LineHeight, Fontsize, paStrings[i], -1);
+
+	x = Width-10.0f;
+	char aBuf[128];
+	str_format(aBuf, sizeof(aBuf), "%.0f", Velspeed/32);
+	float w = TextRender()->TextWidth(0, Fontsize, aBuf, -1);
+	TextRender()->Text(0, x-w, y, Fontsize, aBuf, -1);
+	y += LineHeight;
+	str_format(aBuf, sizeof(aBuf), "%.0f", Velspeed/32*Ramp);
+	w = TextRender()->TextWidth(0, Fontsize, aBuf, -1);
+	TextRender()->Text(0, x-w, y, Fontsize, aBuf, -1);
+	y += LineHeight;
+	str_format(aBuf, sizeof(aBuf), "%.2f", Ramp);
+	w = TextRender()->TextWidth(0, Fontsize, aBuf, -1);
+	TextRender()->Text(0, x-w, y, Fontsize, aBuf, -1);
+	y += 2*LineHeight;
+	str_format(aBuf, sizeof(aBuf), "%d", m_pClient->m_Snap.m_pLocalCharacter->m_X/32);
+	w = TextRender()->TextWidth(0, Fontsize, aBuf, -1);
+	TextRender()->Text(0, x-w, y, Fontsize, aBuf, -1);
+	y += LineHeight;
+	str_format(aBuf, sizeof(aBuf), "%d", m_pClient->m_Snap.m_pLocalCharacter->m_Y/32);
+	w = TextRender()->TextWidth(0, Fontsize, aBuf, -1);
+	TextRender()->Text(0, x-w, y, Fontsize, aBuf, -1);
+	y += 2*LineHeight;
+	str_format(aBuf, sizeof(aBuf), "%d", m_pClient->NetobjNumCorrections());
+	w = TextRender()->TextWidth(0, Fontsize, aBuf, -1);
+	TextRender()->Text(0, x-w, y, Fontsize, aBuf, -1);
+	y += LineHeight;
+	w = TextRender()->TextWidth(0, Fontsize, m_pClient->NetobjCorrectedOn(), -1);
+	TextRender()->Text(0, x-w, y, Fontsize, m_pClient->NetobjCorrectedOn(), -1);
 }
 
 void CDebugHud::RenderTuning()
@@ -45,11 +75,11 @@ void CDebugHud::RenderTuning()
 	// render tuning debugging
 	if(!g_Config.m_DbgTuning)
 		return;
-		
+
 	CTuningParams StandardTuning;
-		
+
 	Graphics()->MapScreen(0, 0, 300*Graphics()->ScreenAspect(), 300);
-	
+
 	float y = 50.0f;
 	int Count = 0;
 	for(int i = 0; i < m_pClient->m_Tuning.Num(); i++)
@@ -58,7 +88,7 @@ void CDebugHud::RenderTuning()
 		float Current, Standard;
 		m_pClient->m_Tuning.Get(i, &Current);
 		StandardTuning.Get(i, &Standard);
-		
+
 		if(Standard == Current)
 			TextRender()->TextColor(1,1,1,1.0f);
 		else
@@ -66,7 +96,7 @@ void CDebugHud::RenderTuning()
 
 		float w;
 		float x = 5.0f;
-		
+
 		str_format(aBuf, sizeof(aBuf), "%.2f", Standard);
 		x += 20.0f;
 		w = TextRender()->TextWidth(0, 5, aBuf, -1);
@@ -79,12 +109,12 @@ void CDebugHud::RenderTuning()
 
 		x += 5.0f;
 		TextRender()->Text(0x0, x, y+Count*6, 5, m_pClient->m_Tuning.m_apNames[i], -1);
-		
+
 		Count++;
 	}
-	
+
 	y = y+Count*6;
-	
+
 	Graphics()->TextureSet(-1);
 	Graphics()->BlendNormal();
 	Graphics()->LinesBegin();

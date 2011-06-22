@@ -1,3 +1,5 @@
+/* (c) Magnus Auvinen. See licence.txt in the root of the distribution for more information. */
+/* If you are missing that file, acquire a complete release at teeworlds.com.                */
 #include <engine/keys.h>
 #include "lineinput.h"
 
@@ -25,19 +27,19 @@ bool CLineInput::Manipulate(IInput::CEvent e, char *pStr, int StrMaxSize, int *p
 	int CursorPos = *pCursorPosPtr;
 	int Len = *pStrLenPtr;
 	bool Changes = false;
-	
+
 	if(CursorPos > Len)
 		CursorPos = Len;
-	
+
 	int Code = e.m_Unicode;
 	int k = e.m_Key;
-	
+
 	// 127 is produced on Mac OS X and corresponds to the delete key
 	if (!(Code >= 0 && Code < 32) && Code != 127)
 	{
 		char Tmp[8];
 		int CharSize = str_utf8_encode(Tmp, Code);
-		
+
 		if (Len < StrMaxSize - CharSize && CursorPos < StrMaxSize - CharSize)
 		{
 			mem_move(pStr + CursorPos + CharSize, pStr + CursorPos, Len - CursorPos + CharSize);
@@ -48,7 +50,7 @@ bool CLineInput::Manipulate(IInput::CEvent e, char *pStr, int StrMaxSize, int *p
 			Changes = true;
 		}
 	}
-	
+
 	if(e.m_Flags&IInput::FLAG_PRESS)
 	{
 		if (k == KEY_BACKSPACE && CursorPos > 0)
@@ -77,7 +79,7 @@ bool CLineInput::Manipulate(IInput::CEvent e, char *pStr, int StrMaxSize, int *p
 		else if (k == KEY_END)
 			CursorPos = Len;
 	}
-	
+
 	*pCursorPosPtr = CursorPos;
 	*pStrLenPtr = Len;
 

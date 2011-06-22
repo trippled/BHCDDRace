@@ -1,3 +1,5 @@
+/* (c) Magnus Auvinen. See licence.txt in the root of the distribution for more information. */
+/* If you are missing that file, acquire a complete release at teeworlds.com.                */
 #ifndef GAME_CLIENT_COMPONENTS_PARTICLES_H
 #define GAME_CLIENT_COMPONENTS_PARTICLES_H
 #include <base/vmath.h>
@@ -19,7 +21,7 @@ struct CParticle
 		m_FlowAffected = 1.0f;
 		m_Color = vec4(1,1,1,1);
 	}
-	
+
 	vec2 m_Pos;
 	vec2 m_Vel;
 
@@ -28,7 +30,7 @@ struct CParticle
 	float m_FlowAffected;
 
 	float m_LifeSpan;
-	
+
 	float m_StartSize;
 	float m_EndSize;
 
@@ -39,7 +41,7 @@ struct CParticle
 	float m_Friction;
 
 	vec4 m_Color;
-	
+
 	// set by the particle system
 	float m_Life;
 	int m_PrevPart;
@@ -59,14 +61,14 @@ public:
 	};
 
 	CParticles();
-	
+
 	void Add(int Group, CParticle *pPart);
-	
+
 	virtual void OnReset();
 	virtual void OnRender();
 
 private:
-	
+
 	enum
 	{
 		MAX_PARTICLES=1024*8,
@@ -75,7 +77,7 @@ private:
 	CParticle m_aParticles[MAX_PARTICLES];
 	int m_FirstFree;
 	int m_aFirstPart[NUM_GROUPS];
-	
+
 	void RenderGroup(int Group);
 	void Update(float TimePassed);
 
@@ -86,7 +88,7 @@ private:
 		CParticles *m_pParts;
 		virtual void OnRender() { m_pParts->RenderGroup(TGROUP); }
 	};
-	
+
 	CRenderGroup<GROUP_PROJECTILE_TRAIL> m_RenderTrail;
 	CRenderGroup<GROUP_EXPLOSIONS> m_RenderExplosions;
 	CRenderGroup<GROUP_GENERAL> m_RenderGeneral;

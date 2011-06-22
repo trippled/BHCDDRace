@@ -1,27 +1,7 @@
+/* (c) Magnus Auvinen. See licence.txt in the root of the distribution for more information. */
+/* If you are missing that file, acquire a complete release at teeworlds.com.                */
 #ifndef ENGINE_CLIENT_CLIENT_H
 #define ENGINE_CLIENT_CLIENT_H
-
-
-#include <engine/console.h>
-#include <engine/editor.h>
-#include <engine/graphics.h>
-#include <engine/textrender.h>
-#include <engine/client.h>
-#include <engine/config.h>
-#include <engine/serverbrowser.h>
-#include <engine/sound.h>
-#include <engine/input.h>
-#include <engine/keys.h>
-#include <engine/map.h>
-#include <engine/masterserver.h>
-#include <engine/storage.h>
-
-#include <engine/shared/engine.h>
-#include <engine/shared/protocol.h>
-#include <engine/shared/demorec.h>
-#include <engine/shared/network.h>
-
-#include "srvbrowse.h"
 
 class CGraph
 {
@@ -71,9 +51,40 @@ public:
 };
 
 
+class CFileCollection
+{
+	enum
+	{
+		MAX_ENTRIES=1000,
+		TIMESTAMP_LENGTH=20,	// _YYYY-MM-DD_HH-MM-SS
+	};
+
+	int64 m_aTimestamps[MAX_ENTRIES];
+	int m_NumTimestamps;
+	int m_MaxEntries;
+	char m_aFileDesc[128];
+	int m_FileDescLength;
+	char m_aFileExt[32];
+	int m_FileExtLength;
+	char m_aPath[512];
+	IStorage *m_pStorage;
+
+	bool IsFilenameValid(const char *pFilename);
+	int64 ExtractTimestamp(const char *pTimestring);
+	void BuildTimestring(int64 Timestamp, char *pTimestring);
+
+public:
+	void Init(IStorage *pStorage, const char *pPath, const char *pFileDesc, const char *pFileExt, int MaxEntries);
+	void AddEntry(int64 Timestamp);
+
+	static int FilelistCallback(const char *pFilename, int IsDir, int StorageType, void *pUser);
+};
+
+
 class CClient : public IClient, public CDemoPlayer::IListner
 {
 	// needed interfaces
+	IEngine *m_pEngine;
 	IEditor *m_pEditor;
 	IEngineInput *m_pInput;
 	IEngineGraphics *m_pGraphics;
@@ -90,11 +101,12 @@ class CClient : public IClient, public CDemoPlayer::IListner
 		PREDICTION_MARGIN=1000/50/2, // magic network prediction value
 	};
 
-	CNetClient m_NetClient;
-	CDemoPlayer m_DemoPlayer;
-	CDemoRecorder m_DemoRecorder;
-	CEngine m_Engine;
-	CServerBrowser m_ServerBrowser;
+	class CNetClient m_NetClient;
+	class CDemoPlayer m_DemoPlayer;
+	class CDemoRecorder m_DemoRecorder;
+	class CServerBrowser m_ServerBrowser;
+	class CFriends m_Friends;
+	class CMapChecker m_MapChecker;
 
 	char m_aServerAddressStr[256];
 
@@ -106,8 +118,13 @@ class CClient : public IClient, public CDemoPlayer::IListner
 	float m_FrameTimeHigh;
 	int m_Frames;
 	NETADDR m_ServerAddress;
+	NETADDR m_BindAddr;
 	int m_WindowMustRefocus;
 	int m_SnapCrcErrors;
+	bool m_AutoScreenshotRecycle;
+	bool m_EditorActive;
+	bool m_SoundInitFailed;
+	bool m_ResortServerBrowser;
 
 	int m_AckGameTick;
 	int m_CurrentRecvTick;
@@ -121,7 +138,7 @@ class CClient : public IClient, public CDemoPlayer::IListner
 
 	//
 	char m_aCurrentMap[256];
-	int m_CurrentMapCrc;
+	unsigned m_CurrentMapCrc;
 
 	//
 	char m_aCmdConnect[256];
@@ -156,28 +173,37 @@ class CClient : public IClient, public CDemoPlayer::IListner
 	CGraph m_FpsGraph;
 
 	// the game snapshots are modifiable by the game
-	CSnapshotStorage m_SnapshotStorage;
+	class CSnapshotStorage m_SnapshotStorage;
 	CSnapshotStorage::CHolder *m_aSnapshots[NUM_SNAPSHOT_TYPES];
 
 	int m_RecivedSnapshots;
 	char m_aSnapshotIncommingData[CSnapshot::MAX_SIZE];
 
-	CSnapshotStorage::CHolder m_aDemorecSnapshotHolders[NUM_SNAPSHOT_TYPES];
+	class CSnapshotStorage::CHolder m_aDemorecSnapshotHolders[NUM_SNAPSHOT_TYPES];
 	char *m_aDemorecSnapshotData[NUM_SNAPSHOT_TYPES][2][CSnapshot::MAX_SIZE];
 
-	CSnapshotDelta m_SnapshotDelta;
+	class CSnapshotDelta m_SnapshotDelta;
 
 	//
-	CServerInfo m_CurrentServerInfo;
+	class CServerInfo m_CurrentServerInfo;
 	int64 m_CurrentServerInfoRequestTime; // >= 0 should request, == -1 got info
 
 	// version info
-	struct
+	struct CVersionInfo
 	{
+		enum
+		{
+			STATE_INIT=0,
+			STATE_START,
+			STATE_READY,
+		};
+
 		int m_State;
-		CHostLookup m_VersionServeraddr;
+		class CHostLookup m_VersionServeraddr;
 	} m_VersionInfo;
+
 public:
+	IEngine *Engine() { return m_pEngine; }
 	IEngineGraphics *Graphics() { return m_pGraphics; }
 	IEngineInput *Input() { return m_pInput; }
 	IEngineSound *Sound() { return m_pSound; }
@@ -200,6 +226,10 @@ public:
 	virtual void Rcon(const char *pCmd);
 
 	virtual bool ConnectionProblems();
+
+	virtual bool SoundInitFailed() { return m_SoundInitFailed; }
+
+	virtual int GetDebugFont() { return m_DebugFont; }
 
 	void DirectInput(int *pInput, int Size);
 	void SendInput();
@@ -229,10 +259,10 @@ public:
 
 	// ---
 
-	void *SnapGetItem(int SnapId, int Index, CSnapItem *pItem);
-	void SnapInvalidateItem(int SnapId, int Index);
-	void *SnapFindItem(int SnapId, int Type, int Id);
-	int SnapNumItems(int SnapId);
+	void *SnapGetItem(int SnapID, int Index, CSnapItem *pItem);
+	void SnapInvalidateItem(int SnapID, int Index);
+	void *SnapFindItem(int SnapID, int Type, int ID);
+	int SnapNumItems(int SnapID);
 	void SnapSetStaticsize(int ItemType, int Size);
 
 	void Render();
@@ -247,7 +277,8 @@ public:
 
 	static int PlayerScoreComp(const void *a, const void *b);
 
-	void ProcessPacket(CNetChunk *pPacket);
+	void ProcessConnlessPacket(CNetChunk *pPacket);
+	void ProcessServerPacket(CNetChunk *pPacket);
 
 	virtual int MapDownloadAmount() { return m_MapdownloadAmount; }
 	virtual int MapDownloadTotalsize() { return m_MapdownloadTotalsize; }
@@ -259,9 +290,6 @@ public:
 
 	void Update();
 
-	virtual const char *UserDirectory();
-
-	void InitEngine(const char *pAppname);
 	void RegisterInterfaces();
 	void InitInterfaces();
 
@@ -277,15 +305,22 @@ public:
 	static void Con_Rcon(IConsole::IResult *pResult, void *pUserData);
 	static void Con_RconAuth(IConsole::IResult *pResult, void *pUserData);
 	static void Con_AddFavorite(IConsole::IResult *pResult, void *pUserData);
+	static void Con_RemoveFavorite(IConsole::IResult *pResult, void *pUserData);
 	static void Con_Play(IConsole::IResult *pResult, void *pUserData);
 	static void Con_Record(IConsole::IResult *pResult, void *pUserData);
 	static void Con_StopRecord(IConsole::IResult *pResult, void *pUserData);
-	static void Con_ServerDummy(IConsole::IResult *pResult, void *pUserData);
+	static void ConchainServerBrowserUpdate(IConsole::IResult *pResult, void *pUserData, IConsole::FCommandCallback pfnCallback, void *pCallbackUserData);
 
 	void RegisterCommands();
 
-	const char *DemoPlayer_Play(const char *pFilename);
+	const char *DemoPlayer_Play(const char *pFilename, int StorageType);
+	void DemoRecorder_Start(const char *pFilename, bool WithTimestamp);
+	void DemoRecorder_HandleAutoStart();
+	void DemoRecorder_Stop();
 
-	virtual class CEngine *Engine() { return &m_Engine; }
+	void AutoScreenshot_Start();
+	void AutoScreenshot_Cleanup();
+
+	void ServerBrowserUpdate();
 };
 #endif

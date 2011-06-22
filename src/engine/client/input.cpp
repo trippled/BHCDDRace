@@ -1,4 +1,5 @@
-// copyright (c) 2007 magnus auvinen, see licence.txt for more info
+/* (c) Magnus Auvinen. See licence.txt in the root of the distribution for more information. */
+/* If you are missing that file, acquire a complete release at teeworlds.com.                */
 #include "SDL.h"
 
 #include <base/system.h>
@@ -31,7 +32,6 @@ CInput::CInput()
 {
 	mem_zero(m_aInputCount, sizeof(m_aInputCount));
 	mem_zero(m_aInputState, sizeof(m_aInputState));
-	mem_zero(m_Keys, sizeof(m_Keys));
 
 	m_InputCurrent = 0;
 	m_InputGrabbed = 0;
@@ -49,7 +49,7 @@ void CInput::Init()
 	SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY, SDL_DEFAULT_REPEAT_INTERVAL);
 }
 
-void CInput::MouseRelative(int *x, int *y)
+void CInput::MouseRelative(float *x, float *y)
 {
 	int nx = 0, ny = 0;
 	float Sens = g_Config.m_InpMousesens/100.0f;
@@ -88,7 +88,13 @@ void CInput::MouseModeRelative()
 
 int CInput::MouseDoubleClick()
 {
-	return m_ReleaseDelta < (time_freq() >> 2);
+	if(m_ReleaseDelta >= 0 && m_ReleaseDelta < (time_freq() >> 2))
+	{
+		m_LastRelease = 0;
+		m_ReleaseDelta = -1;
+		return 1;
+	}
+	return 0;
 }
 
 void CInput::ClearKeyStates()
@@ -102,7 +108,7 @@ int CInput::KeyState(int Key)
 	return m_aInputState[m_InputCurrent][Key];
 }
 
-void CInput::Update()
+int CInput::Update()
 {
 	if(m_InputGrabbed && !Graphics()->WindowActive())
 		MouseModeAbsolute();
@@ -145,21 +151,14 @@ void CInput::Update()
 			{
 				// handle keys
 				case SDL_KEYDOWN:
-					AddEvent(Event.key.keysym.unicode, 0, 0); // ignore_convention
-                    if(Event.key.keysym.unicode != 0 && Event.key.keysym.unicode < 256) // ignore_convention
-                    {
-                        Key = Event.key.keysym.unicode;  // ignore_convention
-                        m_Keys[Event.key.keysym.sym] = Event.key.keysym.unicode; // ignore_convention
-                    }
-                    else
-                        Key = Event.key.keysym.sym;  // ignore_convention
+					// skip private use area of the BMP(contains the unicodes for keyboard function keys on MacOS)
+					if(Event.key.keysym.unicode < 0xE000 || Event.key.keysym.unicode > 0xF8FF)	// ignore_convention
+						AddEvent(Event.key.keysym.unicode, 0, 0); // ignore_convention
+					Key = Event.key.keysym.sym; // ignore_convention
 					break;
 				case SDL_KEYUP:
 					Action = IInput::FLAG_RELEASE;
-					if(m_Keys[Event.key.keysym.sym] != 0) // ignore_convention
-                        Key = m_Keys[Event.key.keysym.sym]; // ignore_convention
-                    else
-                        Key = Event.key.keysym.sym; // ignore_convention
+					Key = Event.key.keysym.sym; // ignore_convention
 					break;
 
 				// handle mouse buttons
@@ -186,9 +185,7 @@ void CInput::Update()
 
 				// other messages
 				case SDL_QUIT:
-					// TODO: cleaner exit
-					exit(0); // ignore_convention
-					break;
+					return 1;
 			}
 
 			//
@@ -202,6 +199,8 @@ void CInput::Update()
 
 		}
 	}
+
+	return 0;
 }
 
 

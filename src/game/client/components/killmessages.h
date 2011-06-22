@@ -1,3 +1,5 @@
+/* (c) Magnus Auvinen. See licence.txt in the root of the distribution for more information. */
+/* If you are missing that file, acquire a complete release at teeworlds.com.                */
 #ifndef GAME_CLIENT_COMPONENTS_KILLMESSAGES_H
 #define GAME_CLIENT_COMPONENTS_KILLMESSAGES_H
 #include <game/client/component.h>
@@ -20,7 +22,7 @@ public:
 		int m_ModeSpecial; // for CTF, if the guy is carrying a flag for example
 		int m_Tick;
 	};
-	
+
 	enum
 	{
 		MAX_KILLMSGS = 5,

@@ -1,11 +1,44 @@
 
 ##### translated strings #####
 
+%d Bytes
+== %d Bytes
+
 %d of %d servers, %d players
-== %d di %d server, %d giocatori
+== %d di %d servers, %d giocatori
+
+%d%% loaded
+== %d%% caricato
+
+%ds left
+== %ds rimanenti
+
+%i minute left
+== %i minuto residuo
+
+%i minutes left
+== %i minuti residui
+
+%i second left
+== %i secondo residuo
+
+%i seconds left
+== %i secondi residui
+
+%s wins!
+== %s vittorie!
+
+-Page %d-
+== -Pagina %d-
 
 Abort
 == Annulla
+
+Add
+== Aggiungi
+
+Add Friend
+== Aggiungi Amico
 
 Address
 == Indirizzo
@@ -17,16 +50,28 @@ Alpha
 == Alpha
 
 Always show name plates
-== Mostra sempre etichette dei nomi
+== Mostra sempre nomi
+
+Are you sure that you want to delete the demo?
+== Sicuro di voler eliminare la demo?
 
 Are you sure that you want to quit?
 == Sicuro di voler uscire?
 
-As this is the first time you have launched the game, please enter your nickname below. It is recommended that you check your settings so you adjust them to your preferences before joining a server.
-== E' la prima volta che avvii il gioco, ti preghiamo di inserire il tuo nickname. E' consigliabile che tu controlli le impostazioni per aggiustarle in base alle tue preferenze prima di entrare in un server.
+Are you sure that you want to remove the player from your friends list?
+== Sicuro di voler rimuovere il giocatore dalla lista degli amici?
+
+As this is the first time you launch the game, please enter your nick name below. It's recommended that you check the settings to adjust them to your liking before joining a server.
+== E' la prima volta che avvii il gioco, inserisci il tuo nickname. E' bene che tu controlli le opzioni prima di giocare per avere una migliore esperienza di gioco.
+
+Automatically record demos
+== Registra automaticamente demo
+
+Automatically take game over screenshot
+== Cattura automaticamente la schermata 'game over'
 
 Blue team
-== Squadra Blu
+== Squadra blu
 
 Blue team wins!
 == La squadra blu ha vinto!
@@ -35,10 +80,19 @@ Body
 == Corpo
 
 Call vote
-== Inizia voto
+== Chiama voto
+
+Change settings
+== Cambia configurazione
 
 Chat
 == Chat
+
+Clan
+== Clan
+
+Client
+== Client
 
 Close
 == Chiudi
@@ -52,11 +106,26 @@ Connect
 Connecting to
 == Connessione a
 
+Connection Problems...
+== Problemi di connessione...
+
 Console
 == Console
 
 Controls
 == Controlli
+
+Count players only
+== Conta solo giocatori
+
+Country
+== Paese
+
+Crc:
+== Crc:
+
+Created:
+== Creato:
 
 Current
 == Attuale
@@ -66,6 +135,15 @@ Current version: %s
 
 Custom colors
 == Colori personalizzati
+
+Delete
+== Elimina
+
+Delete demo
+== Elimina demo
+
+Demo details
+== Dettagli demo
 
 Demos
 == Demo
@@ -77,16 +155,16 @@ Disconnected
 == Disconnesso
 
 Display Modes
-== Tipo di visualizzazione
+== Modalità Display
 
 Downloading map
-== Scaricando la mappa
+== Scaricamento mappa
 
 Draw!
-== Pareggio!
+== Patta!
 
 Dynamic Camera
-== Visuale dinamica
+== Camera dinamica
 
 Emoticon
 == Emoticon
@@ -94,8 +172,14 @@ Emoticon
 Enter
 == Entra
 
+Error
+== Errore
+
+Error loading demo
+== Errore caricamento demo
+
 FSAA samples
-== Esempi FSAA
+== Campioni FSAA
 
 Favorite
 == Preferito
@@ -112,29 +196,41 @@ Filter
 Fire
 == Fuoco
 
+Folder
+== Cartella
+
+Force vote
+== Forza voto
+
+Free-View
+== Camera libera
+
+Friends
+== Amici
+
 Fullscreen
-== Schermo intero
+== A tutto schermo
 
 Game
-== Gioco
+== Partita
 
 Game info
-== Dettagli gioco
+== Informazioni partita
 
 Game over
-== Game over
+== Fine partita
 
 Game type
-== Tipo di gioco
+== Modalità di gioco
 
 Game types:
-== Tipi di gioco:
+== Modalità di gioco:
 
 General
 == Generale
 
 Graphics
-== Grafiche
+== Gráfica
 
 Grenade
 == Granata
@@ -143,40 +239,43 @@ Hammer
 == Martello
 
 Has people playing
-== Ha gente in gioco
+== Contiene giocatori
 
 High Detail
-== Molti dettagli
+== Alta Risoluzione
 
 Hook
 == Rampino
 
 Host address
-== Indirizzo host
+== Indirizzo Host
 
 Hue
-== Col.
+== Tinta
 
 Info
-== Info
+== Informazioni
 
 Internet
 == Internet
 
+Invalid Demo
+== Demo non valida
+
 Join blue
-== Entra blu
+== Unisciti ai blu
 
 Join game
-== Entra
+== Unisciti alla partita
 
 Join red
-== Entra rosso
+== Unisciti ai rossi
 
 Jump
 == Salta
 
-Kick
-== Kick
+Kick player
+== Espelli giocatore
 
 LAN
 == LAN
@@ -184,17 +283,29 @@ LAN
 Language
 == Lingua
 
+Length:
+== Lunghezza:
+
 Lht.
-== Lum.
+== Luminosità
 
 Loading
 == Caricamento
 
 MOTD
-== MDG
+== MOTD
 
 Map
 == Mappa
+
+Map:
+== Mappa:
+
+Max Screenshots
+== Screenshot Massimi
+
+Max demos
+== Demo massime
 
 Maximum ping:
 == Ping massimo:
@@ -203,22 +314,34 @@ Miscellaneous
 == Altro
 
 Mouse sens.
-== Sensibilità
+== Sensività del mouse
 
 Move left
-== Muovi a sinistra
+== Sinistra
+
+Move player to spectators
+== Muovi giocatore tra gli spettatori
 
 Move right
-== Muovi a destra
+== Destra
 
 Movement
 == Movimento
 
 Mute when not active
-== Muto quando inattivo
+== Silenzioso se inattivo
 
 Name
 == Nome
+
+Name plates size
+== Lunghezza nomi
+
+Netversion:
+== Versione net
+
+New name:
+== Nuovo nome:
 
 News
 == Notizie
@@ -239,15 +362,21 @@ No servers found
 == Nessun server trovato
 
 No servers match your filter criteria
-== Nessun server corrisponde ai filtri di ricerca
+== Nessun server rispecchia i tuoi criteri
 
 Ok
 == Ok
 
+Open
+== Apri
+
+Parent Folder
+== Cartella superiore
+
 Password
 == Password
 
-Incorrect password
+Password incorrect
 == Password errata
 
 Ping
@@ -262,14 +391,20 @@ Play
 Player
 == Giocatore
 
+Player options
+== Opzioni giocatore
+
 Players
 == Giocatori
+
+Please balance teams!
+== Bilancia le squadre!
 
 Prev. weapon
 == Arma precedente
 
 Quality Textures
-== Textures di qualità
+== Qualità Textures
 
 Quick search:
 == Ricerca rapida:
@@ -277,74 +412,116 @@ Quick search:
 Quit
 == Esci
 
+Quit anyway?
+== Vuoi uscire comunque?
+
+REC %3d:%02d
+== REC %3d:%02d
+
+Reason:
+== Motivo:
+
+Record demo
+== Registra demo
+
 Red team
 == Squadra rossa
 
 Red team wins!
-== La squadra rossa ha vinto!
+== La squadra rossa vince!
 
 Refresh
 == Aggiorna
 
 Refreshing master servers
-== Aggiornando la lista server
+== Aggiornamento server principali
 
 Remote console
 == Console remota
 
+Remove
+== Rimuovi
+
+Remove friend
+== Rimuovi amico
+
+Rename
+== Renomina
+
+Rename demo
+== Rinomina demo
+
 Reset filter
-== Annulla filtri
+== Azzera filtri
 
 Reset to defaults
-== Reimposta
+== Ripristina impostazioni iniziali
 
 Rifle
-== Laser
+== Mitra
 
 Round
-== Turno
+== Round
 
 Sample rate
-== Frequenza
+== Frequenza di campionamento
 
 Sat.
 == Sat.
 
 Score
-== Punti
+== Punteggi
 
 Score board
-== Scoreboard
+== Tabella dei Punteggi
 
 Score limit
-== Punteggio massimo
+== Punteggio Max.
 
 Scoreboard
-== Scoreboard
+== Tabella dei Punteggi
 
 Screenshot
-== Screenshot
+== Schermata
+
+Server address:
+== Indirizzo server:
 
 Server details
-== Dettagli del server
+== Dettagli server
+
+Server filter
+== Filtri server
 
 Server info
-== Dettagli
+== Info server
 
 Server not full
 == Server non pieno
 
 Settings
-== Impostazioni
+== Configurazioni
 
 Shotgun
-== Shotgun
+== Fucile
+
+Show chat
+== Mostra chat
+
+Show friends
+== Mostra amici
+
+Show ingame HUD
+== Mostra HUD in gioco
 
 Show name plates
-== Mostra etichetta nomi
+== Mostra nomi
 
 Show only supported
 == Mostra solo supportati
+
+Size:
+== Dimensioni:
 
 Skins
 == Skins
@@ -352,23 +529,35 @@ Skins
 Sound
 == Suono
 
+Sound error
+== Suono errore
+
 Sound volume
-== Volume
+== Volume suono
 
 Spectate
-== Osserva
+== Spettatore
+
+Spectator mode
+== Modalità spettatore
 
 Spectators
 == Spettatori
 
 Standard gametype
-== Tipo di gioco classico
+== Tipo di gioco standard
 
 Standard map
-== Mappa classica
+== Mappa standard
+
+Stop record
+== Ferma registrazione
+
+Sudden Death
+== Morte istantanea
 
 Switch weapon on pickup
-== Cambia arma alla raccolta
+== Cambia arma automaticamente
 
 Team
 == Squadra
@@ -377,34 +566,64 @@ Team chat
 == Chat di squadra
 
 Teeworlds %s is out! Download it at www.teeworlds.com!
-== E' uscito Teeworlds %s! Scaricalo da www.teeworlds.com !
+== Teeworlds %s e' stato rilasciato! Scaricalo da www.teeworlds.com!
 
 Texture Compression
-== Compressione Texture
+== Compressione textures
+
+The audio device couldn't be initialised.
+== Il dispositivo audio non può essere inizializzato.
 
 The server is running a non-standard tuning on a pure game type.
-== Il server sta eseguendo un tuning non-standard su un tipo di gioco classico.
+== Il server è attivo con una configurazione non standard in una modalità di gioco pura.
+
+There's an unsaved map in the editor, you might want to save it before you quit the game.
+== C'è una mappa non salvata nell'editor, sicuramente vorrai salvarla prima di uscire.
 
 Time limit
-== Limite di tempo
+== Limite tempo.
+
+Time limit: %d min
+== Limite tempo: %d min
 
 Try again
-== Ritenta
+== Riprova
 
 Type
-== Tipo
+== Tipologia
+
+Type:
+== Tipologia:
 
 UI Color
-== Colore del menu
+== Colore UI
+
+Unable to delete the demo
+== Impossibile eliminare la demo
+
+Unable to rename the demo
+== Impossibile rinominare la demo
 
 Use sounds
-== Usa suoni
+== Attiva suoni
+
+Use team colors for name plates
+== Utilizza i colori del team per i nomi
 
 V-Sync
 == V-Sync
 
 Version
 == Versione
+
+Version:
+== Versione:
+
+Vote command:
+== Comando voto:
+
+Vote description:
+== Descrizione voto:
 
 Vote no
 == Vota no
@@ -413,380 +632,45 @@ Vote yes
 == Vota si
 
 Voting
-== Votazione
+== Votazione in corso
+
+Warmup
+== Riscaldamento
 
 Weapon
 == Arma
 
 Welcome to Teeworlds
-==  Benvenuto su Teeworlds!
+== Benvenuto su Teeworlds!
 
 Yes
 == Si
 
 You must restart the game for all settings to take effect.
-== E' necessario riavviare il gioco per rendere effettive le modifiche.
-
-##### needs translation ####
-
-Force vote
-== Force vote
-
-Show chat
-== Show chat
+== E' necessario riavviare il gioco per impostare i cambiamenti.
 
 Your skin
-== Your skin
+== Tua skin
 
-Password incorrect
-== Password incorrect
+no limit
+== senza limiti
 
-Please balance teams!
-== Please balance teams!
+##### needs translation #####
 
-Connection Problems...
-== Connection Problems...
+Demofile: %s
+== 
 
-Warmup
-== Warmup
+Play background music
+== 
 
-Sudden Death
-== Sudden Death
+Spectate next
+== 
 
-%ds left
-== %ds left
+Spectate previous
+== 
 
-error loading demo
-== error loading demo
+Strict gametype filter
+== 
 
-Error
-== Error
+##### old translations #####
 
-Open map
-== Open map
-
-Open
-== Open
-
-Save map
-== Save map
-
-Save
-== Save
-
-HD
-== HD
-
-[ctrl+h] Toggle High Detail
-== [ctrl+h] Toggle High Detail
-
-Anim
-== Anim
-
-[ctrl+m] Toggle animation
-== [ctrl+m] Toggle animation
-
-Proof
-== Proof
-
-[ctrl+p] Toggles proof borders. These borders represent what a player maximum can see.
-== [ctrl+p] Toggles proof borders. These borders represent what a player maximum can see.
-
-ZO
-== ZO
-
-[NumPad-] Zoom out
-== [NumPad-] Zoom out
-
-[NumPad*] Zoom to normal and remove editor offset
-== [NumPad*] Zoom to normal and remove editor offset
-
-ZI
-== ZI
-
-[NumPad+] Zoom in
-== [NumPad+] Zoom in
-
-Increase animation speed
-== Increase animation speed
-
-Normal animation speed
-== Normal animation speed
-
-Decrease animation speed
-== Decrease animation speed
-
-[N] Flip brush horizontal
-== [N] Flip brush horizontal
-
-[M] Flip brush vertical
-== [M] Flip brush vertical
-
-CCW
-== CCW
-
-[R] Rotates the brush counter clockwise
-== [R] Rotates the brush counter clockwise
-
-CW
-== CW
-
-[T] Rotates the brush clockwise
-== [T] Rotates the brush clockwise
-
-Add Quad
-== Add Quad
-
-Adds a new quad
-== Adds a new quad
-
-Border
-== Border
-
-Left mouse button to move. Hold shift to move pivot. Hold ctrl to rotate.
-== Left mouse button to move. Hold shift to move pivot. Hold ctrl to rotate.
-
-Left mouse button to move. Hold shift to move the texture.
-== Left mouse button to move. Hold shift to move the texture.
-
-Use left mouse button to drag and create a brush.
-== Use left mouse button to drag and create a brush.
-
-Use left mouse button to paint with the brush. Right button clears the brush.
-== Use left mouse button to paint with the brush. Right button clears the brush.
-
-Decrease
-== Decrease
-
-Increase
-== Increase
-
-None
-== None
-
-Toggle group visibility
-== Toggle group visibility
-
-Select group. Right click for properties.
-== Select group. Right click for properties.
-
-Add group
-== Add group
-
-Adds a new group
-== Adds a new group
-
-Embed
-== Embed
-
-Embeds the image into the map file.
-== Embeds the image into the map file.
-
-Make external
-== Make external
-
-Removes the image from the map file.
-== Removes the image from the map file.
-
-Replace
-== Replace
-
-Replaces the image with a new one
-== Replaces the image with a new one
-
-Replace Image
-== Replace Image
-
-Remove
-== Remove
-
-Removes the image from the map
-== Removes the image from the map
-
-Embedded
-== Embedded
-
-External
-== External
-
-Select image
-== Select image
-
-Load a new image to use in the map
-== Load a new image to use in the map
-
-Add Image
-== Add Image
-
-Add
-== Add
-
-Filename:
-== Filename:
-
-Cancel
-== Cancel
-
-Layers
-== Layers
-
-Images
-== Images
-
-Switch between images and layers managment.
-== Switch between images and layers managment.
-
-Envelopes
-== Envelopes
-
-Toggles the envelope editor.
-== Toggles the envelope editor.
-
-%s Right click for context menu.
-== %s Right click for context menu.
-
-Color+
-== Color+
-
-Creates a new color envelope
-== Creates a new color envelope
-
-Pos.+
-== Pos.+
-
-Creates a new pos envelope
-== Creates a new pos envelope
-
-Previous Envelope
-== Previous Envelope
-
-Next Envelope
-== Next Envelope
-
-Name:
-== Name:
-
-Press right mouse button to create a new point
-== Press right mouse button to create a new point
-
-Switch curve type
-== Switch curve type
-
-Left mouse to drag. Hold shift to alter time point aswell. Right click to delete.
-== Left mouse to drag. Hold shift to alter time point aswell. Right click to delete.
-
-New
-== New
-
-Creates a new map
-== Creates a new map
-
-Opens a map for editing
-== Opens a map for editing
-
-Append
-== Append
-
-Opens a map and adds everything from that map to the current one
-== Opens a map and adds everything from that map to the current one
-
-Append map
-== Append map
-
-Saves the current map
-== Saves the current map
-
-Save As
-== Save As
-
-Saves the current map under a new name
-== Saves the current map under a new name
-
-Exits from the editor
-== Exits from the editor
-
-Clear collision
-== Clear collision
-
-Removes collision from this layer
-== Removes collision from this layer
-
-Make collision
-== Make collision
-
-Constructs collision from this layer
-== Constructs collision from this layer
-
-Width
-== Width
-
-Height
-== Height
-
-Image
-== Image
-
-Delete group
-== Delete group
-
-Add quads layer
-== Add quads layer
-
-Creates a new quad layer
-== Creates a new quad layer
-
-Add tile layer
-== Add tile layer
-
-Creates a new tile layer
-== Creates a new tile layer
-
-Delete layer
-== Delete Layer
-
-Deletes the layer
-== Deletes the layer
-
-Group
-== Group
-
-Order
-== Order
-
-Detail
-== Detail
-
-Delete
-== Delete
-
-Deletes the current quad
-== Deletes the current quad
-
-Square
-== Square
-
-Squares the current quad
-== Squares the current quad
-
-Pos. Env
-== Pos. Env
-
-Pos. TO
-== Pos. TO
-
-Color Env
-== Color Env
-
-Color TO
-== Color TO
-
-Select layer. Right click for properties.
-== Select layer. Right click for properties.
-
-Toggle layer visibility
-== Toggle layer visibility
-
-File
-== File
-
-##### old translations ####

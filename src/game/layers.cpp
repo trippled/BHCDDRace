@@ -1,3 +1,5 @@
+/* (c) Magnus Auvinen. See licence.txt in the root of the distribution for more information. */
+/* If you are missing that file, acquire a complete release at teeworlds.com.                */
 #include "layers.h"
 
 CLayers::CLayers()
@@ -16,14 +18,14 @@ void CLayers::Init(class IKernel *pKernel)
 	m_pMap = pKernel->RequestInterface<IMap>();
 	m_pMap->GetType(MAPITEMTYPE_GROUP, &m_GroupsStart, &m_GroupsNum);
 	m_pMap->GetType(MAPITEMTYPE_LAYER, &m_LayersStart, &m_LayersNum);
-	
+
 	for(int g = 0; g < NumGroups(); g++)
 	{
 		CMapItemGroup *pGroup = GetGroup(g);
 		for(int l = 0; l < pGroup->m_NumLayers; l++)
 		{
 			CMapItemLayer *pLayer = GetLayer(pGroup->m_StartLayer+l);
-			
+
 			if(pLayer->m_Type == LAYERTYPE_TILES)
 			{
 				CMapItemLayerTilemap *pTilemap = reinterpret_cast<CMapItemLayerTilemap *>(pLayer);
@@ -37,15 +39,19 @@ void CLayers::Init(class IKernel *pKernel)
 					m_pGameGroup->m_OffsetY = 0;
 					m_pGameGroup->m_ParallaxX = 100;
 					m_pGameGroup->m_ParallaxY = 100;
-					m_pGameGroup->m_UseClipping = 0;
-					m_pGameGroup->m_ClipX = 0;
-					m_pGameGroup->m_ClipY = 0;
-					m_pGameGroup->m_ClipW = 0;
-					m_pGameGroup->m_ClipH = 0;
+
+					if(m_pGameGroup->m_Version >= 2)
+					{
+						m_pGameGroup->m_UseClipping = 0;
+						m_pGameGroup->m_ClipX = 0;
+						m_pGameGroup->m_ClipY = 0;
+						m_pGameGroup->m_ClipW = 0;
+						m_pGameGroup->m_ClipH = 0;
+					}
 
 					break;
 				}
-			}			
+			}
 		}
 	}
 }

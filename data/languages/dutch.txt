@@ -1,12 +1,44 @@
+
 ##### translated strings #####
-%ds left
-== %ds over
+
+%d Bytes
+== %d Bytes
 
 %d of %d servers, %d players
 == %d van %d Servers, %d spelers
 
+%d%% loaded
+== %d%% is geladen
+
+%ds left
+== %ds over
+
+%i minute left
+== nog %i minuut
+
+%i minutes left
+== nog %i minuten
+
+%i second left
+== nog %i seconde
+
+%i seconds left
+== nog %i seconden
+
+%s wins!
+== %s wint!
+
+-Page %d-
+== -Pagina %d-
+
 Abort
 == Afbreken
+
+Add
+== Toevoegen
+
+Add Friend
+== Voeg vriend toe
 
 Address
 == Adres
@@ -18,19 +50,31 @@ Alpha
 == Alpha
 
 Always show name plates
-== Altijd namen laten zien
+== Altijd naamplaten laten zien
+
+Are you sure that you want to delete the demo?
+== Weet je zeker dat je de demo wil verwijderen?
 
 Are you sure that you want to quit?
 == Weet je zeker dat je wil stoppen?
 
+Are you sure that you want to remove the player from your friends list?
+== Weet je zeker dat je deze speler uit je vriendenlijst wilt verwijderen?
+
 As this is the first time you launch the game, please enter your nick name below. It's recommended that you check the settings to adjust them to your liking before joining a server.
 == Omdat dit de eerste keer is dat je het spel opstart, moet je een nicknaam kiezen. Doe dat hieronder. Het is aanbevolen om de instellingen te controleren, voordat je een spel start.
 
+Automatically record demos
+== Automatisch demo's opnemen
+
+Automatically take game over screenshot
+== Automatisch schermafbeeldingen nemen
+
 Blue team
-== Blauw
+== Blauwe team
 
 Blue team wins!
-== Blauw wint!
+== Blauwe team wint!
 
 Body
 == Lichaam
@@ -38,29 +82,50 @@ Body
 Call vote
 == Stem
 
+Change settings
+== Verander instellingen
+
 Chat
 == Chat
+
+Clan
+== Clan
+
+Client
+== Client
 
 Close
 == Sluiten
 
 Compatible version
-== Werkende versie
+== Samenwerkende versie
 
 Connect
 == Verbinden
 
-Connection Problems...
-== Verbindingsproblemen...
-
 Connecting to
 == Verbinden met
+
+Connection Problems...
+== Verbindingsproblemen...
 
 Console
 == Console
 
 Controls
 == Besturing
+
+Count players only
+== Tel alleen spelers
+
+Country
+== Land
+
+Crc:
+== Crc:
+
+Created:
+== Gemaakt:
 
 Current
 == Huidig
@@ -69,10 +134,19 @@ Current version: %s
 == Huidige versie: %s
 
 Custom colors
-== Eigen kleuren
+== Aangepaste kleuren
+
+Delete
+== Verwijder
+
+Delete demo
+== Verwijder demo
+
+Demo details
+== Demo details
 
 Demos
-== Demos
+== Demo's
 
 Disconnect
 == Stoppen
@@ -93,19 +167,19 @@ Dynamic Camera
 == Dynamische camera
 
 Emoticon
-== Emotie
+== Emoticon
 
 Enter
 == Starten
 
-error loading demo
-== Fout bij laden demo
-
 Error
 == Fout
 
+Error loading demo
+== Fout bij laden demo
+
 FSAA samples
-== FSAA voorbeelden
+== FSAA samples
 
 Favorite
 == Favoriet
@@ -120,13 +194,22 @@ Filter
 == Filter
 
 Fire
-== Schiet
+== Schieten
+
+Folder
+== Map
 
 Force vote
 == Forceer stem
 
+Free-View
+== Vrij bewegen
+
+Friends
+== Vrienden
+
 Fullscreen
-== Volledig Scherm
+== Volledig scherm
 
 Game
 == Spel
@@ -141,7 +224,7 @@ Game type
 == Speltype
 
 Game types:
-== Speltypen:
+== Speltypes:
 
 General
 == Algemeen
@@ -156,7 +239,7 @@ Hammer
 == Hamer
 
 Has people playing
-== Er spelen mensen
+== Mensen in server
 
 High Detail
 == Veel details
@@ -176,26 +259,32 @@ Info
 Internet
 == Internet
 
+Invalid Demo
+== Ongeldige demo
+
 Join blue
-== Ga bij Blauw
+== Ga bij blauw
 
 Join game
 == Binnenkomen
 
 Join red
-== Ga bij Rood
+== Ga bij rood
 
 Jump
 == Springen
 
-Kick
-== Kicken
+Kick player
+== Kick speler
 
 LAN
 == LAN
 
 Language
 == Taal
+
+Length:
+== Lengte:
 
 Lht.
 == Licht
@@ -209,17 +298,29 @@ MOTD
 Map
 == Kaart
 
+Map:
+== Kaart:
+
+Max Screenshots
+== Maximaal aantal schermafbeeldingen
+
+Max demos
+== Maximaal aantal demo's
+
 Maximum ping:
-== Maximale Ping:
+== Hoogste ping:
 
 Miscellaneous
 == Diverse
 
 Mouse sens.
-== Muis gevoeligheid
+== Muis resolutie
 
 Move left
 == Naar links
+
+Move player to spectators
+== Verplaats speler naar toeschouwers
 
 Move right
 == Naar rechts
@@ -228,10 +329,19 @@ Movement
 == Bewegen
 
 Mute when not active
-== Demp, waneer niet actief
+== Dempen wanneer inactief
 
 Name
 == Naam
+
+Name plates size
+== Grootte naamplaat
+
+Netversion:
+== Netversie:
+
+New name:
+== Nieuwe naam:
 
 News
 == Nieuws
@@ -249,7 +359,7 @@ No password
 == Geen wachtwoord
 
 No servers found
-== Geen server gevonden
+== Geen servers gevonden
 
 No servers match your filter criteria
 == Geen servers gevonden op zoekopdracht
@@ -257,11 +367,14 @@ No servers match your filter criteria
 Ok
 == Oké
 
+Open
+== Open
+
+Parent Folder
+== Bovenliggende map
+
 Password
 == Wachtwoord
-
-Password Incorrect
-== Wachtwoord verkeerd
 
 Password incorrect
 == Wachtwoord verkeerd
@@ -275,14 +388,20 @@ Pistol
 Play
 == Spelen
 
+Play background music
+== Speel achtergrondmuziek
+
 Player
 == Speler
+
+Player options
+== Speler opties
 
 Players
 == Spelers
 
 Please balance teams!
-== Breng teams in balans!
+== Balanceer teams!
 
 Prev. weapon
 == Vorig wapen
@@ -294,7 +413,19 @@ Quick search:
 == Snel zoeken:
 
 Quit
-== Stoppen
+== Afsluiten
+
+Quit anyway?
+== Toch afsluiten?
+
+REC %3d:%02d
+== REC %3d:%02d
+
+Reason:
+== Reden:
+
+Record demo
+== Neem demo op
 
 Red team
 == Rood
@@ -306,25 +437,37 @@ Refresh
 == Vernieuwen
 
 Refreshing master servers
-== Hoofdserver vernieuwen
- 
+== Masterservers vernieuwen
+
 Remote console
 == Remote console
+
+Remove
+== Verwijderen
+
+Remove friend
+== Verwijder vriend
+
+Rename
+== Hernoem
+
+Rename demo
+== Hernoem demo
 
 Reset filter
 == Herstel filter
 
 Reset to defaults
-== Standaardinstelling
+== Standaardinstellingen
 
 Rifle
-== Geweer
+== Laser
 
 Round
 == Ronde
 
 Sample rate
-== Voorbeeld rate
+== Voorbeeldssnelheid
 
 Sat.
 == Verz.
@@ -342,10 +485,16 @@ Scoreboard
 == Scorebord
 
 Screenshot
-== Screenshot
+== Schermafbeelding
+
+Server address:
+== Serveradres:
 
 Server details
 == Serverdetails
+
+Server filter
+== Serverfilter
 
 Server info
 == Serverinfo
@@ -357,16 +506,25 @@ Settings
 == Instellingen
 
 Shotgun
-== Jachtgeweer
+== Geweer
 
 Show chat
 == Laat chat zien
 
+Show friends
+== Laat vrienden zien
+
+Show ingame HUD
+== Laat ingame HUD zien
+
 Show name plates
-== Laat namen zien
+== Laat naamplaat zien
 
 Show only supported
-== Laat alleen werkende servers zien
+== Laat alleen compatibele servers zien
+
+Size:
+== Grootte:
 
 Skins
 == Skins
@@ -374,11 +532,23 @@ Skins
 Sound
 == Geluid
 
+Sound error
+== Geluidsfout
+
 Sound volume
 == Volume
 
 Spectate
-== Toeschouwer
+== Toekijken
+
+Spectate next
+== Volg volgende speler
+
+Spectate previous
+== Volg vorige speler
+
+Spectator mode
+== Toeschouwer modus
 
 Spectators
 == Toeschouwers
@@ -389,11 +559,14 @@ Standard gametype
 Standard map
 == Standaard kaart
 
+Stop record
+== Stop met opnemen
+
 Sudden Death
 == Sudden Death
 
 Switch weapon on pickup
-== Verander wapen bij opakken
+== Verander wapen bij het oppakken
 
 Team
 == Team
@@ -402,16 +575,25 @@ Team chat
 == Team chat
 
 Teeworlds %s is out! Download it at www.teeworlds.com!
-== Teeworld %s is uit! Download het op www.teeworlds.com!
+== Teeworlds %s is uit! Download het op www.teeworlds.com!
 
 Texture Compression
-== Structuur verkleinen
+== Structuurscompressie
+
+The audio device couldn't be initialised.
+== Het geluid kon niet worden geladen.
 
 The server is running a non-standard tuning on a pure game type.
 == The server draait geen standaard spel type.
 
+There's an unsaved map in the editor, you might want to save it before you quit the game.
+== Er is een onopgeslagen kaart in de editor, misschien wil je deze opslaan voordat je stopt.
+
 Time limit
 == Tijdlimiet
+
+Time limit: %d min
+== Tijdslimiet: %d minuten
 
 Try again
 == Probeer opnieuw
@@ -419,11 +601,23 @@ Try again
 Type
 == Type
 
+Type:
+== Type:
+
 UI Color
 == UI kleur
 
+Unable to delete the demo
+== Demo kon niet worden verwijderd
+
+Unable to rename the demo
+== Niet mogelijk om de demo te hernoemen
+
 Use sounds
 == Gebruik geluid
+
+Use team colors for name plates
+== Gebruik teamkleuren voor naamplaten
 
 V-Sync
 == V-Sync
@@ -431,11 +625,20 @@ V-Sync
 Version
 == Versie
 
+Version:
+== Versie:
+
+Vote command:
+== Stem commando:
+
+Vote description:
+== Stem omschrijving:
+
 Vote no
-== No
+== Stem nee
 
 Vote yes
-== Ja
+== Stem ja
 
 Voting
 == Stemmen
@@ -458,333 +661,16 @@ You must restart the game for all settings to take effect.
 Your skin
 == Jouw skin
 
-##### needs translation ####
+no limit
+== ongelimiteerd
 
-Open map
-== Open kaart
+##### needs translation #####
 
-Open
-== Open
+Demofile: %s
+== 
 
-Save map
-== Sla kaart op
+Strict gametype filter
+== 
 
-Save
-== Opslaan
+##### old translations #####
 
-HD
-== Det.
-
-[ctrl+h] Toggle High Detail
-== [ctrl+h] Activeer Details
-
-Anim
-== Anim.
-
-[ctrl+m] Toggle animation
-== [ctrl+m] Activeer animaties
-
-Proof
-== Test
-
-[ctrl+p] Toggles proof borders. These borders represent what a player maximum can see.
-== [ctrl+p] Test grenzen. Deze grenzen laten zien wat een speler maximaal kan zien.
-
-ZO
-== ZO
-
-[NumPad-] Zoom out
-== [NumPad-] Uitzoomen
-
-[NumPad*] Zoom to normal and remove editor offset
-== [NumPad*] Zoom naar normaal en verwijder toevoegingen van de editor 
-
-ZI
-== ZI
-
-[NumPad+] Zoom in
-== [NumPad+] Inzoomen
-
-Increase animation speed
-== Vergroot animatie snelheid
-
-Normal animation speed
-== Normale animatie snelheid
-
-Decrease animation speed
-== Verklein animatie snelheid
-
-[N] Flip brush horizontal
-== [N] Draai kwast horizontaal
-
-[M] Flip brush vertical
-== [M] Draai kwast verticaal
-
-CCW
-== CCW
-
-[R] Rotates the brush counter clockwise
-== [R] Draai de kwast tegen de klok in
-
-CW
-== CW
-
-[T] Rotates the brush clockwise
-== [T] Draai de kwast met de klok mee
-
-Add Quad
-== Voeg Quad toe
-
-Adds a new quad
-== Voegt een nieuwe Quad toe
-
-Border
-== Grens
-
-Left mouse button to move. Hold shift to move pivot. Hold ctrl to rotate.
-== Linkermuisknop om te bewegen. Druk shift in om te roteren. Druk ctrl om te draaien.
-
-Left mouse button to move. Hold shift to move the texture.
-== Linkermuisknop om te bewegen. Druk shift in om de textuur te bewegen
-
-Use left mouse button to drag and create a brush.
-== Gebruik de linkermuisknop om de kwast te maken en te slepen.
-
-Use left mouse button to paint with the brush. Right button clears the brush.
-== Gebruik de linkermuisknop om de kwast te gebruiken. Rechtermuisknop maakt de kwast schoon. 
-
-Decrease
-== Verkleinen
-
-Increase
-== Vergroten
-
-None
-== Geen
-
-Toggle group visibility
-== Acitveer groepszichtbaarheid
-
-Select group. Right click for properties.
-== Kies een groep. Rechtermuisknop voor eigenschappen.
-
-Add group
-== Voeg groep toe
-
-Adds a new group
-== Voegt een nieuwe groep toe
-
-Embed
-== Insluiten
-
-Embeds the image into the map file.
-== Sluit een afbeelding in in het bestand van de kaart
-
-Make external
-== Maak extern
-
-Removes the image from the map file.
-== Verwijderd de afbeelding uit de kaart.
-
-Replace
-== Vervang
-
-Replaces the image with a new one
-== Vervangt de afbeelding met een nieuwe
-
-Replace Image
-== Vervang afbeelding
-
-Remove
-== Verwijder
-
-Removes the image from the map
-== Verwijderd de afbeelding uit de kaart
-
-Embedded
-== Ingesloten
-
-External
-== Extern
-
-Select image
-== Selecteer afbeelding
-
-Load a new image to use in the map
-== Laad een nieuwe afbeelding om te gebruiken in de kaart
-
-Add Image
-== Voeg afbeelding toe
-
-Add
-== Voeg toe
-
-Filename:
-== Bestandsnaam:
-
-Cancel
-== Annuleren
-
-Layers
-== Lagen
-
-Images
-== Afbeeldingen
-
-Switch between images and layers managment.
-== Wissel tussen afbeeldinglaag en beheerlaag.
-
-Envelopes
-== Envelopes
-
-Toggles the envelope editor.
-== Activeer de envelope editor.
-
-%s Right click for context menu.
-== %s Rechtermuisknop voor context menu.
-
-Color+
-== Kleur+
-
-Creates a new color envelope
-== Maakt een nieuwe kleur envelope
-
-Pos.+
-== Pos.+
-
-Creates a new pos envelope
-== Maakt een nieuwe pos envelope
-
-Previous Envelope
-== Vorige envelope
-
-Next Envelope
-== Volgende envelope
-
-Name:
-== Naam:
-
-Press right mouse button to create a new point
-== Rechtermuisknop om een nieuw punt te maken
-
-Switch curve type
-== Wissel bocht type
-
-Left mouse to drag. Hold shift to alter time point aswell. Right click to delete.
-== Linkermuisknop om te slepen. Druk shift in om het punt te veranderen. Rechtermuisknop om te verwijderen.
-
-New
-== Nieuw
-
-Creates a new map
-== Maakt een nieuwe kaart.
-
-Opens a map for editing
-== Opent een kaart om te bewerken
-
-Append
-== Toevoegen
-
-Opens a map and adds everything from that map to the current one
-== Opent een kaart en voegt alles van die kaart toe aan de huidige
-
-Append map
-== Voeg kaart toe
-
-Saves the current map
-== Sla huidige kaart op
-
-Save As
-== Opslaan als
-
-Saves the current map under a new name
-== Sla de huidige kaart op onder een nieuwe naam
-
-Exits from the editor
-== Verlaat de editor
-
-Clear collision
-== Verwijder botsingen
-
-Removes collision from this layer
-== Verwijderd botsingen in deze laag
-
-Make collision
-== Maak botsing
-
-Constructs collision from this layer
-== Maakt botsing van deze laag
-
-Width
-== Breedte
-
-Height
-== Hoogte
-
-Image
-== Afbeelding
-
-Delete group
-== Verwijder groep
-
-Add quads layer
-== Voeg quads laag toe
-
-Creates a new quad layer
-== Maakt een nieuwe quads laag
-
-Add tile layer
-== Voeg tegel laag toe
-
-Creates a new tile layer
-== Maakt een nieuwe tegel laag
-
-Delete layer
-== Verwijder laag
-
-Deletes the layer
-== Verwijdert de laag
-
-Group
-== Groep
-
-Order
-== Volgorde
-
-Detail
-== Detail
-
-Delete
-== Verwijder
-
-Deletes the current quad
-== Verwijdert de huidige quad
-
-Square
-== Vereffenen
-
-Squares the current quad
-== Vereffenen de huidige quad
-
-Pos. Env
-== Pos. Env
-
-Pos. TO
-== Pos. TO
-
-Color Env
-== Kleur Env
-
-Color TO
-== Kleur TO
-
-Select layer. Right click for properties.
-== Selecteer laag. Rechtermuisknop voor eigenschappen.
-
-Toggle layer visibility
-== Activeer zichtbaarheid laag
-
-File
-== Bestand
-
-##### old translations ####

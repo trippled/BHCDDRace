@@ -1,3 +1,5 @@
+/* (c) Magnus Auvinen. See licence.txt in the root of the distribution for more information. */
+/* If you are missing that file, acquire a complete release at teeworlds.com.                */
 #include <base/system.h>
 #include "huffman.h"
 
@@ -7,13 +9,13 @@ struct CHuffmanConstructNode
  	int m_Frequency;
 };
 
-void CHuffman::Setbits_r(CNode *pNode, int Bits, int Depth)
+void CHuffman::Setbits_r(CNode *pNode, int Bits, unsigned Depth)
 {
 	if(pNode->m_aLeafs[1] != 0xffff)
 		Setbits_r(&m_aNodes[pNode->m_aLeafs[1]], Bits|(1<<Depth), Depth+1);
 	if(pNode->m_aLeafs[0] != 0xffff)
 		Setbits_r(&m_aNodes[pNode->m_aLeafs[0]], Bits, Depth+1);
-		
+
 	if(pNode->m_NumBits)
 	{
 		pNode->m_Bits = Bits;
@@ -26,7 +28,7 @@ static void BubbleSort(CHuffmanConstructNode **ppList, int Size)
 {
 	int Changed = 1;
 	CHuffmanConstructNode *pTemp;
-	
+
 	while(Changed)
 	{
 		Changed = 0;
@@ -40,6 +42,7 @@ static void BubbleSort(CHuffmanConstructNode **ppList, int Size)
 				Changed = 1;
 			}
 		}
+		Size--;
 	}
 }
 
@@ -52,10 +55,10 @@ void CHuffman::ConstructTree(const unsigned *pFrequencies)
 	// add the symbols
 	for(int i = 0; i < HUFFMAN_MAX_SYMBOLS; i++)
 	{
-		m_aNodes[i].m_NumBits = -1;
+		m_aNodes[i].m_NumBits = 0xFFFFFFFF;
 		m_aNodes[i].m_Symbol = i;
-		m_aNodes[i].m_aLeafs[0] = -1;
-		m_aNodes[i].m_aLeafs[1] = -1;
+		m_aNodes[i].m_aLeafs[0] = 0xffff;
+		m_aNodes[i].m_aLeafs[1] = 0xffff;
 
 		if(i == HUFFMAN_EOF_SYMBOL)
 			aNodesLeftStorage[i].m_Frequency = 1;
@@ -65,15 +68,15 @@ void CHuffman::ConstructTree(const unsigned *pFrequencies)
 		apNodesLeft[i] = &aNodesLeftStorage[i];
 
 	}
-	
+
 	m_NumNodes = HUFFMAN_MAX_SYMBOLS;
-	
+
 	// construct the table
 	while(NumNodesLeft > 1)
 	{
 		// we can't rely on stdlib's qsort for this, it can generate different results on different implementations
 		BubbleSort(apNodesLeft, NumNodesLeft);
-		
+
 		m_aNodes[m_NumNodes].m_NumBits = 0;
 		m_aNodes[m_NumNodes].m_aLeafs[0] = apNodesLeft[NumNodesLeft-1]->m_NodeId;
 		m_aNodes[m_NumNodes].m_aLeafs[1] = apNodesLeft[NumNodesLeft-2]->m_NodeId;
@@ -86,7 +89,7 @@ void CHuffman::ConstructTree(const unsigned *pFrequencies)
 
 	// set start node
 	m_pStartNode = &m_aNodes[m_NumNodes-1];
-	
+
 	// build symbol bits
 	Setbits_r(m_pStartNode, 0, 0);
 }
@@ -227,6 +230,9 @@ int CHuffman::Decompress(const void *pInput, int InputSize, void *pOutput, int O
 		// {C} load symbol now if we didn't that earlier at location {A}
 		if(!pNode)
 			pNode = m_apDecodeLut[Bits&HUFFMAN_LUTMASK];
+
+		if(!pNode)
+			return -1;
 
 		// {D} check if we hit a symbol already
 		if(pNode->m_NumBits)

@@ -1,3 +1,5 @@
+/* (c) Magnus Auvinen. See licence.txt in the root of the distribution for more information. */
+/* If you are missing that file, acquire a complete release at teeworlds.com.                */
 #include <engine/graphics.h>
 #include <engine/textrender.h>
 #include <game/generated/protocol.h>
@@ -19,7 +21,7 @@ void CKillMessages::OnMessage(int MsgType, void *pRawMsg)
 	if(MsgType == NETMSGTYPE_SV_KILLMSG)
 	{
 		CNetMsg_Sv_KillMsg *pMsg = (CNetMsg_Sv_KillMsg *)pRawMsg;
-		
+
 		// unpack messages
 		CKillMsg Kill;
 		Kill.m_VictimID = pMsg->m_Victim;
@@ -49,10 +51,9 @@ void CKillMessages::OnRender()
 	float StartX = Width*1.5f-10.0f;
 	float y = 20.0f;
 
-	for(int i = 0; i < MAX_KILLMSGS; i++)
+	for(int i = 1; i <= MAX_KILLMSGS; i++)
 	{
-
-		int r = (m_KillmsgCurrent+i+1)%MAX_KILLMSGS;
+		int r = (m_KillmsgCurrent+i)%MAX_KILLMSGS;
 		if(Client()->GameTick() > m_aKillmsgs[r].m_Tick+50*10)
 			continue;
 
@@ -68,8 +69,8 @@ void CKillMessages::OnRender()
 
 		// render victim tee
 		x -= 24.0f;
-		
-		if(m_pClient->m_Snap.m_pGameobj && m_pClient->m_Snap.m_pGameobj->m_Flags&GAMEFLAG_FLAGS)
+
+		if(m_pClient->m_Snap.m_pGameInfoObj && m_pClient->m_Snap.m_pGameInfoObj->m_GameFlags&GAMEFLAG_FLAGS)
 		{
 			if(m_aKillmsgs[r].m_ModeSpecial&1)
 			{
@@ -77,21 +78,21 @@ void CKillMessages::OnRender()
 				Graphics()->TextureSet(g_pData->m_aImages[IMAGE_GAME].m_Id);
 				Graphics()->QuadsBegin();
 
-				if(m_aKillmsgs[r].m_VictimTeam == 0)
+				if(m_aKillmsgs[r].m_VictimTeam == TEAM_RED)
 					RenderTools()->SelectSprite(SPRITE_FLAG_BLUE);
 				else
 					RenderTools()->SelectSprite(SPRITE_FLAG_RED);
-				
+
 				float Size = 56.0f;
 				IGraphics::CQuadItem QuadItem(x, y-16, Size/2, Size);
 				Graphics()->QuadsDrawTL(&QuadItem, 1);
-				Graphics()->QuadsEnd();					
+				Graphics()->QuadsEnd();
 			}
 		}
-		
+
 		RenderTools()->RenderTee(CAnimState::GetIdle(), &m_aKillmsgs[r].m_VictimRenderInfo, EMOTE_PAIN, vec2(-1,0), vec2(x, y+28));
 		x -= 32.0f;
-		
+
 		// render weapon
 		x -= 44.0f;
 		if (m_aKillmsgs[r].m_Weapon >= 0)
@@ -106,7 +107,7 @@ void CKillMessages::OnRender()
 
 		if(m_aKillmsgs[r].m_VictimID != m_aKillmsgs[r].m_KillerID)
 		{
-			if(m_pClient->m_Snap.m_pGameobj && m_pClient->m_Snap.m_pGameobj->m_Flags&GAMEFLAG_FLAGS)
+			if(m_pClient->m_Snap.m_pGameInfoObj && m_pClient->m_Snap.m_pGameInfoObj->m_GameFlags&GAMEFLAG_FLAGS)
 			{
 				if(m_aKillmsgs[r].m_ModeSpecial&2)
 				{
@@ -114,18 +115,18 @@ void CKillMessages::OnRender()
 					Graphics()->TextureSet(g_pData->m_aImages[IMAGE_GAME].m_Id);
 					Graphics()->QuadsBegin();
 
-					if(m_aKillmsgs[r].m_KillerTeam == 0)
+					if(m_aKillmsgs[r].m_KillerTeam == TEAM_RED)
 						RenderTools()->SelectSprite(SPRITE_FLAG_BLUE, SPRITE_FLAG_FLIP_X);
 					else
 						RenderTools()->SelectSprite(SPRITE_FLAG_RED, SPRITE_FLAG_FLIP_X);
-					
+
 					float Size = 56.0f;
 					IGraphics::CQuadItem QuadItem(x-56, y-16, Size/2, Size);
 					Graphics()->QuadsDrawTL(&QuadItem, 1);
-					Graphics()->QuadsEnd();				
+					Graphics()->QuadsEnd();
 				}
-			}				
-			
+			}
+
 			// render killer tee
 			x -= 24.0f;
 			RenderTools()->RenderTee(CAnimState::GetIdle(), &m_aKillmsgs[r].m_KillerRenderInfo, EMOTE_ANGRY, vec2(1,0), vec2(x, y+28));
@@ -136,6 +137,6 @@ void CKillMessages::OnRender()
 			TextRender()->Text(0, x, y, FontSize, m_aKillmsgs[r].m_aKillerName, -1);
 		}
 
-		y += 44;
+		y += 46.0f;
 	}
 }

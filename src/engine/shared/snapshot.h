@@ -1,3 +1,5 @@
+/* (c) Magnus Auvinen. See licence.txt in the root of the distribution for more information. */
+/* If you are missing that file, acquire a complete release at teeworlds.com.                */
 #ifndef ENGINE_SHARED_SNAPSHOT_H
 #define ENGINE_SHARED_SNAPSHOT_H
 
@@ -9,7 +11,7 @@ class CSnapshotItem
 {
 public:
 	int m_TypeAndID;
-	
+
 	int *Data() { return (int *)(this+1); }
 	int Type() { return m_TypeAndID>>16; }
 	int ID() { return m_TypeAndID&0xffff; }
@@ -88,15 +90,15 @@ public:
 	public:
 		CHolder *m_pPrev;
 		CHolder *m_pNext;
-		
+
 		int64 m_Tagtime;
 		int m_Tick;
-		
+
 		int m_SnapSize;
 		CSnapshot *m_pSnap;
 		CSnapshot *m_pAltSnap;
 	};
-	 
+
 
 	CHolder *m_pFirst;
 	CHolder *m_pLast;
@@ -112,7 +114,7 @@ class CSnapshotBuilder
 {
 	enum
 	{
-		MAX_ITEMS = 1024*2
+		MAX_ITEMS = 1024
 	};
 
 	char m_aData[CSnapshot::MAX_SIZE];
@@ -123,12 +125,12 @@ class CSnapshotBuilder
 
 public:
 	void Init();
-	
+
 	void *NewItem(int Type, int ID, int Size);
-	
+
 	CSnapshotItem *GetItem(int Index);
 	int *GetItemData(int Key);
-	
+
 	int Finish(void *Snapdata);
 };
 

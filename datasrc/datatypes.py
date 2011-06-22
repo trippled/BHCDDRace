@@ -1,5 +1,5 @@
+import sys
 
-	
 GlobalIdCounter = 0
 def GetID():
 	global GlobalIdCounter
@@ -21,7 +21,7 @@ def FixCasing(Str):
 			else:
 				NewStr += c.lower()
 	return NewStr
-	
+
 def FormatName(type, name):
 	if "*" in type:
 		return "m_p" + FixCasing(name)
@@ -33,13 +33,13 @@ class BaseType:
 	def __init__(self, type_name):
 		self._type_name = type_name
 		self._target_name = "INVALID"
-		self._id = GetID() # this is used to remeber what order the members have in structures etc
-	
+		self._id = GetID() # this is used to remember what order the members have in structures etc
+
 	def Identifyer(self): return "x"+str(self._id)
 	def TargetName(self): return self._target_name
 	def TypeName(self): return self._type_name
 	def ID(self): return self._id;
-	
+
 	def EmitDeclaration(self, name):
 		return ["%s %s;"%(self.TypeName(), FormatName(self.TypeName(), name))]
 	def EmitPreDefinition(self, target_name):
@@ -52,26 +52,26 @@ class MemberType:
 	def __init__(self, name, var):
 		self.name = name
 		self.var = var
-		
+
 class Struct(BaseType):
 	def __init__(self, type_name):
 		BaseType.__init__(self, type_name)
 	def Members(self):
-		def sorter(a,b):
-			return a.var.ID()-b.var.ID()
+		def sorter(a):
+			return a.var.ID()
 		m = []
 		for name in self.__dict__:
 			if name[0] == "_":
 				continue
 			m += [MemberType(name, self.__dict__[name])]
 		try:
-			m.sort(sorter)
+			m.sort(key = sorter)
 		except:
 			for v in m:
-				print v.name, v.var
+				print(v.name, v.var)
 			sys.exit(-1)
 		return m
-		
+
 	def EmitTypeDeclaration(self, name):
 		lines = []
 		lines += ["struct " + self.TypeName()]
@@ -93,7 +93,7 @@ class Struct(BaseType):
 			lines += ["\t" + " ".join(member.var.EmitDefinition("")) + ","]
 		lines += ["}"]
 		return lines
-		
+
 class Array(BaseType):
 	def __init__(self, type):
 		BaseType.__init__(self, type.TypeName())
@@ -114,7 +114,7 @@ class Array(BaseType):
 		for item in self.items:
 			lines += item.EmitPreDefinition("%s[%d]"%(self.Identifyer(), i))
 			i += 1
-			
+
 		if len(self.items):
 			lines += ["static %s %s[] = {"%(self.TypeName(), self.Identifyer())]
 			for item in self.items:
@@ -123,7 +123,7 @@ class Array(BaseType):
 			lines += ["};"]
 		else:
 			lines += ["static %s *%s = 0;"%(self.TypeName(), self.Identifyer())]
-			
+
 		return lines
 	def EmitDefinition(self, name):
 		return [str(len(self.items))+","+self.Identifyer()]
@@ -139,7 +139,7 @@ class Int(BaseType):
 	def EmitDefinition(self, name):
 		return ["%d"%self.value]
 		#return ["%d /* %s */"%(self.value, self._target_name)]
-		
+
 class Float(BaseType):
 	def __init__(self, value):
 		BaseType.__init__(self, "float")
@@ -149,7 +149,7 @@ class Float(BaseType):
 	def EmitDefinition(self, name):
 		return ["%f"%self.value]
 		#return ["%d /* %s */"%(self.value, self._target_name)]
-		
+
 class String(BaseType):
 	def __init__(self, value):
 		BaseType.__init__(self, "const char*")
@@ -158,7 +158,7 @@ class String(BaseType):
 		self.value = value
 	def EmitDefinition(self, name):
 		return ['"'+self.value+'"']
-		
+
 class Pointer(BaseType):
 	def __init__(self, type, target):
 		BaseType.__init__(self, "%s*"%type().TypeName())
@@ -172,15 +172,15 @@ class Pointer(BaseType):
 
 def EmitTypeDeclaration(root):
 	for l in root().EmitTypeDeclaration(""):
-		print l
+		print(l)
 
 def EmitDefinition(root, name):
 	for l in root.EmitPreDefinition(name):
-		print l
-	print "%s %s = " % (root.TypeName(), name)
+		print(l)
+	print("%s %s = " % (root.TypeName(), name))
 	for l in root.EmitDefinition(name):
-		print l
-	print ";"
+		print(l)
+	print(";")
 
 # Network stuff after this
 
@@ -227,13 +227,13 @@ class NetObject:
 		lines += ["\treturn 0;"]
 		lines += ["}"]
 		return lines
-		
+
 
 class NetEvent(NetObject):
 	def __init__(self, name, variables):
 		NetObject.__init__(self, name, variables)
-		self.base_struct_name = "NETEVENT_%s" % self.base.upper()
-		self.struct_name = "NETEVENT_%s" % self.name.upper()
+		self.base_struct_name = "CNetEvent_%s" % self.base
+		self.struct_name = "CNetEvent_%s" % self.name
 		self.enum_name = "NETEVENTTYPE_%s" % self.name.upper()
 
 class NetMessage(NetObject):
@@ -265,12 +265,12 @@ class NetMessage(NetObject):
 			extra += ["\t\t"+line for line in v.emit_pack()]
 		extra += ["\t\treturn pPacker->Error() != 0;"]
 		extra += ["\t}"]
-		
-		
+
+
 		lines = NetObject.emit_declaration(self)
 		lines = lines[:-1] + extra + lines[-1:]
 		return lines
-		
+
 
 class NetVariable:
 	def __init__(self, name):
@@ -291,6 +291,14 @@ class NetString(NetVariable):
 		return ["const char *%s;"%self.name]
 	def emit_unpack(self):
 		return ["pMsg->%s = pUnpacker->GetString();" % self.name]
+	def emit_pack(self):
+		return ["pPacker->AddString(%s, -1);" % self.name]
+
+class NetStringStrict(NetVariable):
+	def emit_declaration(self):
+		return ["const char *%s;"%self.name]
+	def emit_unpack(self):
+		return ["pMsg->%s = pUnpacker->GetString(CUnpacker::SANITIZE_CC|CUnpacker::SKIP_START_WHITESPACES);" % self.name]
 	def emit_pack(self):
 		return ["pPacker->AddString(%s, -1);" % self.name]
 
