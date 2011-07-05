@@ -446,6 +446,7 @@ static CKeyInfo gs_aKeys[] =
 	{ "Remote console", "toggle_remote_console", 0 },
 	{ "Screenshot", "screenshot", 0 },
 	{ "Scoreboard", "+scoreboard", 0 },
+	{ "IRC console", "toggle_irc_console", 0 },
 };
 
 /*	This is for scripts/update_localization.py to work, don't remove!
@@ -590,7 +591,7 @@ void CMenus::RenderSettingsControls(CUIRect MainView)
 		TextRender()->Text(0, MiscSettings.x, MiscSettings.y, 14.0f*UI()->Scale(), Localize("Miscellaneous"), -1);
 
 		MiscSettings.HSplitTop(14.0f+5.0f+10.0f, 0, &MiscSettings);
-		UiDoGetButtons(17, 25, MiscSettings);
+		UiDoGetButtons(17, 26, MiscSettings);
 	}
 
 }
@@ -924,7 +925,8 @@ void CMenus::RenderSettings(CUIRect MainView)
 		("Tee"),
 		Localize("Controls"),
 		Localize("Graphics"),
-		Localize("Sound")};
+		Localize("Sound"),
+		Localize("IRC")};
 
 	int NumTabs = (int)(sizeof(aTabs)/sizeof(*aTabs));
 
@@ -952,7 +954,78 @@ void CMenus::RenderSettings(CUIRect MainView)
 		RenderSettingsGraphics(MainView);
 	else if(s_SettingsPage == 6)
 		RenderSettingsSound(MainView);
+	else if(s_SettingsPage == 7)
+		RenderSettingsIRC(MainView);
 
 	if(m_NeedRestartGraphics || m_NeedRestartSound)
 		UI()->DoLabel(&RestartWarning, Localize("You must restart the game for all settings to take effect."), 15.0f, -1);
+}
+
+void CMenus::RenderSettingsIRC(CUIRect MainView)
+{
+	CUIRect Button, Label;
+	MainView.VSplitLeft(300.0f, &MainView, 0);
+	char aBuf[64];
+
+	MainView.HSplitTop(20.0f, &Button, &MainView);
+	if(DoButton_CheckBox(&g_Config.m_GfxIRC, Localize("Enable IRC chat"), g_Config.m_GfxIRC, &Button))
+	{
+		g_Config.m_GfxIRC ^= 1;
+	}
+
+	if (g_Config.m_GfxIRC)
+	{
+		//Server
+		MainView.HSplitTop(5.0f, 0, &MainView);
+		MainView.HSplitTop(20.0f, &Button, &MainView);
+		Button.VSplitLeft(90.0f, &Label, &Button);
+		Button.VSplitLeft(150.0f, &Button, 0);
+		str_format(aBuf, sizeof(aBuf), "%s:", Localize("Server"));
+		UI()->DoLabelScaled(&Label, aBuf, 14.0, -1);
+		static float s_OffsetServer = 0.0f;
+		DoEditBox(g_Config.m_IRCServer, &Button, g_Config.m_IRCServer, sizeof(g_Config.m_IRCServer), 14.0f, &s_OffsetServer);
+
+		//Port
+		MainView.HSplitTop(5.0f, 0, &MainView);
+		MainView.HSplitTop(20.0f, &Button, &MainView);
+		Button.VSplitLeft(90.0f, &Label, &Button);
+		Button.VSplitLeft(150.0f, &Button, 0);
+		str_format(aBuf, sizeof(aBuf), "%s:", Localize("Port"));
+		UI()->DoLabelScaled(&Label, aBuf, 14.0, -1);
+		static float s_OffsetPort = 0.0f;
+		DoEditBox(g_Config.m_IRCPort, &Button, g_Config.m_IRCPort, sizeof(g_Config.m_IRCPort), 14.0f, &s_OffsetPort);
+
+		//Channel
+		MainView.HSplitTop(5.0f, 0, &MainView);
+		MainView.HSplitTop(20.0f, &Button, &MainView);
+		Button.VSplitLeft(90.0f, &Label, &Button);
+		Button.VSplitLeft(150.0f, &Button, 0);
+		str_format(aBuf, sizeof(aBuf), "%s:", Localize("Channel"));
+		UI()->DoLabelScaled(&Label, aBuf, 14.0, -1);
+		static float s_OffsetChannel = 0.0f;
+		DoEditBox(g_Config.m_IRCChannel, &Button, g_Config.m_IRCChannel, sizeof(g_Config.m_IRCChannel), 14.0f, &s_OffsetChannel);
+
+		//Channel Key
+		MainView.HSplitTop(5.0f, 0, &MainView);
+		MainView.HSplitTop(20.0f, &Button, &MainView);
+		Button.VSplitLeft(90.0f, &Label, &Button);
+		Button.VSplitLeft(150.0f, &Button, 0);
+		str_format(aBuf, sizeof(aBuf), "%s:", Localize("Channel Key"));
+		UI()->DoLabelScaled(&Label, aBuf, 14.0, -1);
+		static float s_OffsetChannelKey = 0.0f;
+		DoEditBox(g_Config.m_IRCChannelKey, &Button, g_Config.m_IRCChannelKey, sizeof(g_Config.m_IRCChannelKey), 14.0f, &s_OffsetChannelKey);
+
+		MainView.HSplitTop(5.0f, 0, &MainView);
+		MainView.HSplitTop(20.0f, &Button, &MainView);
+		if(DoButton_CheckBox(&g_Config.m_IRCMotd, Localize("Display Motd (Message of the Day)"), g_Config.m_IRCMotd, &Button))
+		{
+			g_Config.m_IRCMotd ^= 1;
+		}
+
+		MainView.HSplitTop(20.0f, &Button, &MainView);
+		if(DoButton_CheckBox(&g_Config.m_IRCDebug, Localize("Show debug output in console"), g_Config.m_IRCDebug, &Button))
+		{
+			g_Config.m_IRCDebug ^= 1;
+		}
+	}
 }

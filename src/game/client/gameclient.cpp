@@ -1109,3 +1109,9 @@ IGameClient *CreateGameClient()
 {
 	return &g_GameClient;
 }
+
+void CGameClient::OnIRCLine(const char *pLine)
+{
+	m_pGameConsole->PrintLine(CGameConsole::CONSOLETYPE_REMOTE, pLine);
+	dbg_msg("IRC", pLine);
+}

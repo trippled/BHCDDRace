@@ -135,6 +135,12 @@ public:
 	virtual bool SoundInitFailed() = 0;
 
 	virtual int GetDebugFont() = 0;
+
+	//XXLIRC
+	virtual void IRCSend(const char *pCmd) = 0;
+	virtual int IRCGetNewMessages() = 0;
+	virtual void IRCResetMessages() = 0;
+	virtual const char* IRCGetNickName() = 0;
 };
 
 class IGameClient : public IInterface
@@ -162,6 +168,9 @@ public:
 	virtual int GetCountryIndex(int Code) = 0;
 	virtual const char *Version() = 0;
 	virtual const char *NetVersion() = 0;
+
+	//XXLIRC
+	virtual void OnIRCLine(const char *pLine) = 0;
 
 };
 

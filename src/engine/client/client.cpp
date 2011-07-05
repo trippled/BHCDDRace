@@ -44,7 +44,14 @@
 	#define _WIN32_WINNT 0x0501
 	#define WIN32_LEAN_AND_MEAN
 	#include <windows.h>
+#else
+	#include "pthread.h" //XXLIRC
 #endif
+
+//XXLIRC
+#include "irc.h"
+#include "string.h"
+#include <cctype>
 
 
 void CGraph::Init(float Min, float Max)
@@ -2444,4 +2451,155 @@ int main(int argc, const char **argv) // ignore_convention
 	pConfig->Save();
 
 	return 0;
+}
+
+//XXLIRC
+int CClient::IRCGetNewMessages()
+{
+	return irc.m_NewMessages;
+}
+
+void CClient::IRCResetMessages()
+{
+	irc.m_NewMessages = 0;
+}
+
+const char* CClient::IRCGetNickName()
+{
+	return irc.m_IRCData.m_Nick;
+}
+
+void CClient::IRCParseThread(void* pClient)
+{
+	CClient *pSelf = (CClient *) pClient;
+	char aBuf[1024];
+	char *temp = aBuf;
+
+	while (pSelf->irc.m_Connected)
+	{
+		thread_sleep(1);
+		pSelf->irc.MainParser(temp);
+
+		if (temp == NULL || str_comp(temp, "") == 0)
+			continue;
+
+		pSelf->GameClient()->OnIRCLine(temp);
+		pSelf->irc.m_NewMessages += 1;
+	}
+
+	pSelf->irc.Leave();
+}
+
+void CClient::IRCSend(const char *pMsg)
+{
+	dbg_msg("IRC", pMsg);
+	char aBuf[512];
+
+	if (!g_Config.m_GfxIRC)
+	{
+		GameClient()->OnIRCLine("*** IRC is disabled. Settings->IRC->Enable IRC chat");
+		return;
+	}
+
+	if (pMsg[0] == '/')
+	{
+		if (str_comp(pMsg, "/connect") == 0)
+		{
+			if (irc.m_Connected)
+			{
+				str_format(aBuf, sizeof(aBuf), "*** Already connected to %s:%i. Disconnect first (/quit)", irc.m_IRCData.m_Server, irc.m_IRCData.m_Port);
+				GameClient()->OnIRCLine(aBuf);
+				return;
+			}
+
+			//set defaults
+			IRC::CIRCData ircTemp = {"irc.kottnet.net",
+							6667,
+							"#XXLDDRace",
+							"",
+							"XXLTest",
+							"IRC Teeworlds Client",};
+
+			//preparing nickname
+			char temp_nick[16];
+			str_copy(temp_nick, g_Config.m_PlayerName, 16);
+
+			if (!isalpha(temp_nick[0])) //first digit has to be a character or TODO: XXLTomate: -_[]{}\|`^
+			{
+				for (int i = strlen(temp_nick) ; i > 0 ; i--)
+					temp_nick[i] = temp_nick[i-1];
+				temp_nick[0] = 'a'; //TODO: XXLTomate: add '_' in front of if first char is a number (doesn't work yet)
+			}
+
+			//check and replace not valid characters
+			for (int i = 0; i < strlen(temp_nick) ; i++)
+			{
+				if (!isalnum(temp_nick[i])
+						&& (temp_nick[i] != '-'
+						|| temp_nick[i] != '_'
+						|| temp_nick[i] != '['
+						|| temp_nick[i] != ']'
+						|| temp_nick[i] != '{'
+						|| temp_nick[i] != '}'
+						|| temp_nick[i] != '\\'
+						|| temp_nick[i] != '|'
+						|| temp_nick[i] != '`'
+						|| temp_nick[i] != '^'))
+					temp_nick[i] = '_';
+			}
+
+			//set setting values
+			str_copy(ircTemp.m_Server, g_Config.m_IRCServer, 32);
+			ircTemp.m_Port = atoi(g_Config.m_IRCPort);
+			str_copy(ircTemp.m_Channel, g_Config.m_IRCChannel, 32);
+			str_copy(ircTemp.m_ChannelKey, g_Config.m_IRCChannelKey, 32);
+			str_copy(ircTemp.m_Nick, temp_nick, 32);
+			str_copy(ircTemp.m_RealName, "IRC Teeworlds Client", 32);
+			irc.m_IRCData = ircTemp;
+
+			//set socket and connect to server
+			char *temp = aBuf;
+			irc.Init(temp);
+			if (temp == NULL || strcmp(temp, "") != 0)
+			{
+				GameClient()->OnIRCLine(temp);
+				return;
+			}
+
+			str_format(aBuf, sizeof(aBuf), "*** Connected to %s:%i", irc.m_IRCData.m_Server, irc.m_IRCData.m_Port);
+			GameClient()->OnIRCLine(aBuf);
+			irc.m_Connected = true;
+
+			void *pSaveThread = thread_create(IRCParseThread, this);
+#if defined(CONF_FAMILY_UNIX)
+			pthread_detach((pthread_t)pSaveThread);
+#endif
+		}
+		else if (str_comp(pMsg, "/names") == 0)
+		{
+			irc.Names();
+		}
+		else if (str_comp(pMsg, "/topic") == 0)
+		{
+			irc.Topic();
+		}
+		else if (str_comp(pMsg, "/quit") == 0)
+		{
+			irc.Quit(); //TODO: XXLTomate: reason
+			irc.m_Connected = false;
+			str_format(aBuf, sizeof(aBuf), "*** Disconnected from %s:%i", irc.m_IRCData.m_Server, irc.m_IRCData.m_Port);
+			GameClient()->OnIRCLine(aBuf);
+		}
+		else
+		{
+			str_format(aBuf, sizeof(aBuf), "*** No such command \"%s\"", pMsg);
+			GameClient()->OnIRCLine(aBuf);
+		}
+	}
+	else if (irc.m_Connected)
+	{
+		str_format(aBuf, sizeof(aBuf), "%s: %s", irc.m_IRCData.m_Nick, pMsg);
+		irc.Send(pMsg);
+		GameClient()->OnIRCLine(aBuf);
+	}
 }

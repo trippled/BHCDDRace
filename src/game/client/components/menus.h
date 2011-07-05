@@ -241,6 +241,7 @@ class CMenus : public CComponent
 	void RenderSettingsGraphics(CUIRect MainView);
 	void RenderSettingsSound(CUIRect MainView);
 	void RenderSettings(CUIRect MainView);
+	void RenderSettingsIRC(CUIRect MainView); //XXLIRC
 
 	void SetActive(bool Active);
 public:

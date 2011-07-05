@@ -92,4 +92,13 @@ MACRO_CONFIG_INT(DbgGraphs, dbg_graphs, 0, 0, 1, CFGFLAG_CLIENT, "Performance gr
 MACRO_CONFIG_INT(DbgHitch, dbg_hitch, 0, 0, 0, CFGFLAG_SERVER, "Hitch warnings")
 MACRO_CONFIG_STR(DbgStressServer, dbg_stress_server, 32, "localhost", CFGFLAG_CLIENT, "Server to stress")
 MACRO_CONFIG_INT(DbgResizable, dbg_resizable, 0, 0, 0, CFGFLAG_CLIENT, "Enables window resizing")
+
+//XXLIRC
+MACRO_CONFIG_INT(GfxIRC, gfx_irc, 1, 0, 1, CFGFLAG_SAVE|CFGFLAG_CLIENT, "Enable IRC chat")
+MACRO_CONFIG_STR(IRCServer, irc_server, 32, "irc.kottnet.net", CFGFLAG_SAVE|CFGFLAG_CLIENT, "IRC server")
+MACRO_CONFIG_STR(IRCPort, irc_port, 6, "6667", CFGFLAG_SAVE|CFGFLAG_CLIENT, "IRC port")
+MACRO_CONFIG_STR(IRCChannel, irc_channel, 32, "#XXLDDRace", CFGFLAG_SAVE|CFGFLAG_CLIENT, "IRC channel")
+MACRO_CONFIG_STR(IRCChannelKey, irc_channel_key, 32, "", CFGFLAG_SAVE|CFGFLAG_CLIENT, "IRC channel key")
+MACRO_CONFIG_INT(IRCDebug, irc_debug, 0, 0, 1, CFGFLAG_SAVE|CFGFLAG_CLIENT, "Show debug output in console")
+MACRO_CONFIG_INT(IRCMotd, irc_motd, 0, 0, 1, CFGFLAG_SAVE|CFGFLAG_CLIENT, "Display Motd (Message of the Day)")
 #endif
