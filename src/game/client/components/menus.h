@@ -7,6 +7,7 @@
 #include <base/tl/sorted_array.h>
 
 #include <engine/demo.h>
+#include <engine/friends.h>
 
 #include <game/voting.h>
 #include <game/client/component.h>
@@ -102,6 +103,7 @@ private:
 		POPUP_DISCONNECTED,
 		POPUP_PURE,
 		POPUP_LANGUAGE,
+		POPUP_COUNTRY,
 		POPUP_DELETE_DEMO,
 		POPUP_RENAME_DEMO,
 		POPUP_REMOVE_FRIEND,
@@ -204,7 +206,33 @@ private:
 	void DemolistPopulate();
 	static int DemolistFetchCallback(const char *pName, int IsDir, int StorageType, void *pUser);
 
+	// friends
+	struct CFriendItem
+	{
+		const CFriendInfo *m_pFriendInfo;
+		int m_NumFound;
+
+		bool operator<(const CFriendItem &Other)
+		{
+			if(m_NumFound && !Other.m_NumFound)
+				return true;
+			else if(!m_NumFound && Other.m_NumFound)
+				return false;
+			else
+			{
+				int Result = str_comp(m_pFriendInfo->m_aName, Other.m_pFriendInfo->m_aName);
+				if(Result)
+					return Result < 0;
+				else
+					return str_comp(m_pFriendInfo->m_aClan, Other.m_pFriendInfo->m_aClan) < 0;
+			}
+		}
+	};
+
+	sorted_array<CFriendItem> m_lFriends;
 	int m_FriendlistSelectedIndex;
+
+	void FriendlistOnUpdate();
 
 	// found in menus.cpp
 	int Render();
@@ -227,11 +255,13 @@ private:
 
 	// found in menus_browser.cpp
 	int m_SelectedIndex;
+	int m_ScrollOffset;
 	void RenderServerbrowserServerList(CUIRect View);
 	void RenderServerbrowserServerDetail(CUIRect View);
 	void RenderServerbrowserFilters(CUIRect View);
 	void RenderServerbrowserFriends(CUIRect View);
 	void RenderServerbrowser(CUIRect MainView);
+	static void ConchainFriendlistUpdate(IConsole::IResult *pResult, void *pUserData, IConsole::FCommandCallback pfnCallback, void *pCallbackUserData);
 	static void ConchainServerbrowserUpdate(IConsole::IResult *pResult, void *pUserData, IConsole::FCommandCallback pfnCallback, void *pCallbackUserData);
 
 	// found in menus_settings.cpp
