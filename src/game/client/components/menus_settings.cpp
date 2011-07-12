@@ -446,7 +446,7 @@ static CKeyInfo gs_aKeys[] =
 	{ "Remote console", "toggle_remote_console", 0 },
 	{ "Screenshot", "screenshot", 0 },
 	{ "Scoreboard", "+scoreboard", 0 },
-	{ "IRC console", "toggle_irc_console", 0 },
+	{ "IRC frontend", "toggle_irc", 0 },
 };
 
 /*	This is for scripts/update_localization.py to work, don't remove!
