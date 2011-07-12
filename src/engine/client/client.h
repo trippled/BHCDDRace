@@ -333,5 +333,7 @@ public:
 	virtual int IRCGetNewMessages();
 	virtual void IRCResetMessages();
 	virtual const char* IRCGetNickName();
+	virtual bool IRCGetUsers(char ***pUsers);
+	virtual bool IRCIsConnecnted();
 };
 #endif

@@ -113,38 +113,70 @@ void IRC::Topic()
 }
 
 void IRC::OutFormat(char* pOut, char* pArg[IRC_MAX_ARGS], int argumentCount, int offset, char* prefix, bool skipFirstChar)
-{			char aBuf[IRC_BUFFER_SIZE];
-			char bBuf[IRC_BUFFER_SIZE];
+{
+	char aBuf[IRC_BUFFER_SIZE];
+	char bBuf[IRC_BUFFER_SIZE];
 
-			if (skipFirstChar)
-				str_format(aBuf, sizeof(aBuf), "%s%s", prefix, pArg[offset]+1);
-			else
-				str_format(aBuf, sizeof(aBuf), "%s%s", prefix, pArg[offset]);
+	if (skipFirstChar)
+		str_format(aBuf, sizeof(aBuf), "%s%s", prefix, pArg[offset]+1);
+	else
+		str_format(aBuf, sizeof(aBuf), "%s%s", prefix, pArg[offset]);
 
-			//pointer ping pong
-			for(int i = 1; i< argumentCount-offset; i++)
-				if (i % 2 == 0)
-					str_format(aBuf, sizeof(aBuf), "%s %s", bBuf, pArg[offset+i]);
-				else
-					str_format(bBuf, sizeof(bBuf), "%s %s", aBuf, pArg[offset+i]);
+	//pointer ping pong
+	for(int i = 1; i< argumentCount-offset; i++)
+		if (i % 2 == 0)
+			str_format(aBuf, sizeof(aBuf), "%s %s", bBuf, pArg[offset+i]);
+		else
+			str_format(bBuf, sizeof(bBuf), "%s %s", aBuf, pArg[offset+i]);
 
-			if ((argumentCount-offset) % 2 == 0)
-				str_copy(pOut, bBuf, sizeof(bBuf));
-			else
-				str_copy(pOut, aBuf, sizeof(aBuf));
-			return;
+	if ((argumentCount-offset) % 2 == 0)
+		str_copy(pOut, bBuf, sizeof(bBuf));
+	else
+		str_copy(pOut, aBuf, sizeof(aBuf));
+	return;
+}
+
+void IRC::SetUsers(char* pArg[IRC_MAX_ARGS], int argumentCount, int offset)
+{
+	char *pToken;
+	char* pUser[IRC_MAX_ARGS];
+	int m_UserCount = 0;
+
+	mem_zero(m_UserBuffer, sizeof(m_UserBuffer));
+	str_copy(m_UserBuffer, m_Buffer, sizeof(m_UserBuffer));
+
+	pToken = strtok(m_UserBuffer, " ");
+	while (pToken != NULL)
+	{
+		pUser[m_UserCount] = pToken;
+		pToken = strtok(NULL, " ");
+		m_UserCount++;
+	}
+
+	pUsers[0] = pUser[offset]+1;
+	for(int i = 1; i< argumentCount-offset; i++)
+	{
+		pUsers[i] = pUser[offset+i];
+		dbg_msg("asd", "%s", pUsers[i]);
+	}
+
+	m_NewUserList = true;
 }
 
 void IRC::MainParser(char *pOut)
 {
 	char aBuf[IRC_BUFFER_SIZE];
+	char *pToken;
 	str_copy(pOut, "", 1);
 	mem_zero(m_Buffer, sizeof(m_Buffer));
+	mem_zero(m_ParseBuffer, sizeof(m_ParseBuffer));
 
 	if (RecvLine(m_Buffer, sizeof(m_Buffer)) == 0)
 		return;
 
-	pToken = strtok(m_Buffer, " ");
+	str_copy(m_ParseBuffer, m_Buffer, sizeof(m_ParseBuffer));
+	pToken = strtok(m_ParseBuffer, " ");
+
 	m_ArgumentCount = 0;
 
 	while (pToken != NULL)
@@ -187,6 +219,7 @@ void IRC::MainParser(char *pOut)
 		{
 			str_format(aBuf, sizeof(aBuf), "*** Users at %s: ", m_IRCData.m_Channel);
 			OutFormat(pOut, pArgument, m_ArgumentCount, 5, aBuf);
+			SetUsers(pArgument, m_ArgumentCount, 5);
 			return;
 		}
 		else if (str_comp(pArgument[1], "332") == 0) //Topic
@@ -225,6 +258,8 @@ void IRC::MainParser(char *pOut)
 			str_copy(pOut, aBuf, sizeof(aBuf));
 			return;
 		}
+		//all 3 need a update :P
+		Names(); //Update userlist
 	}
 
 	if(m_ArgumentCount >= 3)
@@ -234,6 +269,7 @@ void IRC::MainParser(char *pOut)
 			m_Sender = strtok(pArgument[0], "!")+1;
 			str_format(aBuf, sizeof(aBuf), "*** %s has quit: ", m_Sender);
 			OutFormat(pOut, pArgument, m_ArgumentCount, 2, aBuf);
+			Names(); //Update userlist
 			return;
 		}
 	}

@@ -141,6 +141,8 @@ public:
 	virtual int IRCGetNewMessages() = 0;
 	virtual void IRCResetMessages() = 0;
 	virtual const char* IRCGetNickName() = 0;
+	virtual bool IRCIsConnecnted() = 0;
+	virtual bool IRCGetUsers(char ***pUsers) = 0;
 };
 
 class IGameClient : public IInterface

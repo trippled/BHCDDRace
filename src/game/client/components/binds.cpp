@@ -117,6 +117,8 @@ void CBinds::SetDefaults()
 
 	Bind(KEY_F3, "vote yes");
 	Bind(KEY_F4, "vote no");
+
+	Bind(KEY_F5, "toggle_irc");
 }
 
 void CBinds::OnConsoleInit()

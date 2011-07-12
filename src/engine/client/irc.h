@@ -4,7 +4,7 @@
 
 #define IRC_BUFFER_SIZE	512
 #define IRC_MAX_ARGS	256
-
+#define IRC_MAX_USERS	128 //TODO: XXLTomate: there is not a limit for users in a channel
 
 class IRC
 {
@@ -21,7 +21,9 @@ public:
 	} m_IRCData;
 
 	bool m_Connected;
+	bool m_NewUserList;
 	int m_NewMessages;
+	char* pUsers[IRC_MAX_USERS];
 
 	void MainParser(char *pOut);
 	void Init(char *pOut);
@@ -36,6 +38,7 @@ private:
 	int SendLine(char *format_p);
 	int RecvLine(char *line_p, unsigned int line_size);
 	void OutFormat(char* pOut, char* pArg[IRC_MAX_ARGS], int argumentCount, int offset, char* prefix, bool skipFirstChar = true);
+	void SetUsers(char* pArg[IRC_MAX_ARGS], int argumentCount, int offset);
 
 	int	m_Sock;//the socket handle
 	int m_ConnectAttempts;
@@ -45,6 +48,8 @@ private:
 	char m_Nick[56];
 	char *m_Sender;
 	char *pArgument[IRC_MAX_ARGS]; //splited buffer by " "
-	char *pToken;
+
+	char m_ParseBuffer[512];
+	char m_UserBuffer[512];
 };
 #endif

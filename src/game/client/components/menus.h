@@ -74,6 +74,7 @@ class CMenus : public CComponent
 	//static int ui_do_key_reader(void *id, const CUIRect *rect, int key);
 	void UiDoGetButtons(int Start, int Stop, CUIRect View);
 
+public:
 	struct CListboxItem
 	{
 		int m_Visible;
@@ -88,6 +89,7 @@ class CMenus : public CComponent
 	CListboxItem UiDoListboxNextRow();
 	int UiDoListboxEnd(float *pScrollValue, bool *pItemActivated);
 
+private:
 	//static void demolist_listdir_callback(const char *name, int is_dir, void *user);
 	//static void demolist_list_callback(const CUIRect *rect, int index, void *user);
 

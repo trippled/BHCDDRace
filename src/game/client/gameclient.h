@@ -241,6 +241,7 @@ public:
 	class CVoting *m_pVoting;
 	class CScoreboard *m_pScoreboard;
 	class CItems *m_pItems;
+	class CIrcFrontend *m_pIrcFrontend;
 
 	//XXLIRC
 	virtual void OnIRCLine(const char *pLine);

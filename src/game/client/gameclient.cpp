@@ -36,6 +36,7 @@
 #include "components/flow.h"
 #include "components/hud.h"
 #include "components/items.h"
+#include "components/irc.h"
 #include "components/killmessages.h"
 #include "components/mapimages.h"
 #include "components/maplayers.h"
@@ -75,6 +76,7 @@ static CEmoticon gs_Emoticon;
 static CDamageInd gsDamageInd;
 static CVoting gs_Voting;
 static CSpectator gs_Spectator;
+static CIrcFrontend gs_IRCFrontend;
 
 static CPlayers gs_Players;
 static CNamePlates gs_NamePlates;
@@ -137,6 +139,7 @@ void CGameClient::OnConsoleInit()
 	m_pVoting = &::gs_Voting;
 	m_pScoreboard = &::gs_Scoreboard;
 	m_pItems = &::gs_Items;
+	m_pIrcFrontend = &::gs_IRCFrontend;
 
 	// make a list of all the systems, make sure to add them in the corrent render order
 	m_All.Add(m_pSkins);
@@ -170,12 +173,14 @@ void CGameClient::OnConsoleInit()
 	m_All.Add(&gs_Scoreboard);
 	m_All.Add(m_pMotd);
 	m_All.Add(m_pMenus);
+	m_All.Add(m_pIrcFrontend);
 	m_All.Add(m_pGameConsole);
 
 	// build the input stack
 	m_Input.Add(&m_pMenus->m_Binder); // this will take over all input when we want to bind a key
 	m_Input.Add(&m_pBinds->m_SpecialBinds);
 	m_Input.Add(m_pGameConsole);
+	m_Input.Add(m_pIrcFrontend);
 	m_Input.Add(m_pChat); // chat has higher prio due to tha you can quit it by pressing esc
 	m_Input.Add(m_pMotd); // for pressing esc to remove it
 	m_Input.Add(m_pMenus);
@@ -300,7 +305,7 @@ void CGameClient::DispatchInput()
 		{
 			if(m_Input.m_paComponents[h]->OnInput(e))
 			{
-				//dbg_msg("", "%d char=%d key=%d flags=%d", h, e.ch, e.key, e.flags);
+//				dbg_msg("", "%d char=%d key=%d flags=%d", h, e.m_Unicode, e.m_Key, e.m_Flags);
 				break;
 			}
 		}
@@ -1112,6 +1117,7 @@ IGameClient *CreateGameClient()
 
 void CGameClient::OnIRCLine(const char *pLine)
 {
-	m_pGameConsole->PrintLine(CGameConsole::CONSOLETYPE_REMOTE, pLine);
+
+	m_pIrcFrontend->PrintLine(pLine);
 	dbg_msg("IRC", pLine);
 }

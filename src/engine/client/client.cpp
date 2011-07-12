@@ -2469,6 +2469,24 @@ const char* CClient::IRCGetNickName()
 	return irc.m_IRCData.m_Nick;
 }
 
+bool CClient::IRCGetUsers(char ***pUsers)
+{
+	*pUsers = irc.pUsers;
+
+	if (irc.m_NewUserList)
+	{
+		irc.m_NewUserList = false;
+		return true;
+	}
+	else
+		return false;
+}
+
+bool CClient::IRCIsConnecnted()
+{
+	return irc.m_Connected;
+}
+
 void CClient::IRCParseThread(void* pClient)
 {
 	CClient *pSelf = (CClient *) pClient;
