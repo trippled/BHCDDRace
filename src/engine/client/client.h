@@ -130,6 +130,7 @@ class CClient : public IClient, public CDemoPlayer::IListner
 	int m_AckGameTick;
 	int m_CurrentRecvTick;
 	int m_RconAuthed;
+	int m_UseTempRconCommands;
 
 	// version-checking
 	char m_aVersionStr[10];
@@ -224,7 +225,8 @@ public:
 	void SendEnterGame();
 	void SendReady();
 
-	virtual bool RconAuthed();
+	virtual bool RconAuthed() { return m_RconAuthed != 0; }
+	virtual bool UseTempRconCommands() { return m_UseTempRconCommands != 0; }
 	void RconAuth(const char *pName, const char *pPassword);
 	virtual void Rcon(const char *pCmd);
 
