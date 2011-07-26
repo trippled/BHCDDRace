@@ -2,14 +2,14 @@
 #include "irc.h"
 
 #ifdef WIN32
-#include <windows.h>
-#include <winsock.h>
+	#include <windows.h>
+	#include <winsock.h>
 #else
-#include <sys/socket.h>
-#include <sys/types.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <netdb.h>
+	#include <sys/socket.h>
+	#include <sys/types.h>
+	#include <netinet/in.h>
+	#include <arpa/inet.h>
+	#include <netdb.h>
 #endif
 
 #include <stdio.h>
@@ -155,10 +155,7 @@ void IRC::SetUsers(char* pArg[IRC_MAX_ARGS], int argumentCount, int offset)
 
 	pUsers[0] = pUser[offset]+1;
 	for(int i = 1; i< argumentCount-offset; i++)
-	{
 		pUsers[i] = pUser[offset+i];
-		dbg_msg("asd", "%s", pUsers[i]);
-	}
 
 	m_NewUserList = true;
 }
@@ -217,8 +214,12 @@ void IRC::MainParser(char *pOut)
 		}
 		else if (str_comp(pArgument[1], "353") == 0) //Users at channel
 		{
-			str_format(aBuf, sizeof(aBuf), "*** Users at %s: ", m_IRCData.m_Channel);
-			OutFormat(pOut, pArgument, m_ArgumentCount, 5, aBuf);
+			if (m_HideNextOutput != HIDE_NAME)
+			{
+				str_format(aBuf, sizeof(aBuf), "*** Users at %s: ", m_IRCData.m_Channel);
+				OutFormat(pOut, pArgument, m_ArgumentCount, 5, aBuf);
+				m_HideNextOutput = HIDE_NONE;
+			}
 			SetUsers(pArgument, m_ArgumentCount, 5);
 			return;
 		}
@@ -242,6 +243,9 @@ void IRC::MainParser(char *pOut)
 			m_Sender = strtok(pArgument[0], "!")+1;
 			str_format(aBuf, sizeof(aBuf), "*** %s is now known as %s", m_Sender, pArgument[2]+1);
 			str_copy(pOut, aBuf, sizeof(aBuf));
+
+			Names(); //Update userlist
+			m_HideNextOutput = HIDE_NAME;
 			return;
 		}
 		else if (str_comp(pArgument[1], "PART") == 0)
@@ -249,6 +253,9 @@ void IRC::MainParser(char *pOut)
 			m_Sender = strtok(pArgument[0], "!")+1;
 			str_format(aBuf, sizeof(aBuf), "*** %s has left %s", m_Sender, pArgument[2]);
 			str_copy(pOut, aBuf, sizeof(aBuf));
+
+			Names(); //Update userlist
+			m_HideNextOutput = HIDE_NAME;
 			return;
 		}
 		else if (str_comp(pArgument[1], "JOIN") == 0)
@@ -256,10 +263,11 @@ void IRC::MainParser(char *pOut)
 			m_Sender = strtok(pArgument[0], "!")+1;
 			str_format(aBuf, sizeof(aBuf), "*** %s has joined %s", m_Sender, pArgument[2]+1);
 			str_copy(pOut, aBuf, sizeof(aBuf));
+
+			Names(); //Update userlist
+			m_HideNextOutput = HIDE_NAME;
 			return;
 		}
-		//all 3 need a update :P
-		Names(); //Update userlist
 	}
 
 	if(m_ArgumentCount >= 3)

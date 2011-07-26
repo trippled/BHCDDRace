@@ -20,9 +20,16 @@ public:
 		char m_RealName[32];
 	} m_IRCData;
 
+	enum
+	{
+		HIDE_NONE,
+		HIDE_NAME
+	};
+
 	bool m_Connected;
 	bool m_NewUserList;
 	int m_NewMessages;
+	int m_HideNextOutput;
 	char* pUsers[IRC_MAX_USERS];
 
 	void MainParser(char *pOut);
