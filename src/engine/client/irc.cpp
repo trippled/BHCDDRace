@@ -295,9 +295,9 @@ void IRC::MainParser(char *pOut)
 		{
 			m_Sender = strtok(pArgument[0], "!")+1;
 			if (str_comp(pArgument[2], m_IRCData.m_Channel) == 0)
-				str_format(aBuf, sizeof(aBuf), "*** Mode of %s/%s was set to %s by %s", pArgument[2], m_IRCData.m_Nick, pArgument[3] ,m_Sender);
+				str_format(aBuf, sizeof(aBuf), "*** Mode of %s/%s was set to %s by %s", pArgument[2], pArgument[4], pArgument[3] ,m_Sender);
 			else
-				str_format(aBuf, sizeof(aBuf), "*** Mode of %s/%s was set to %s by %s", m_IRCData.m_Channel, pArgument[2], pArgument[3] ,m_Sender);
+				str_format(aBuf, sizeof(aBuf), "*** Mode of %s/%s was set to %s by %s", pArgument[4], pArgument[2], pArgument[3] ,m_Sender);
 			str_copy(pOut, aBuf, sizeof(aBuf));
 			return;
 		}
