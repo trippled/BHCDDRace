@@ -28,6 +28,10 @@ void CIrcFrontend::OnInit()
 	m_FontSize = 16.0f;
 	m_pHistoryEntry = 0x0;
 	m_ChatlogActPage = 0;
+	m_IrcCommands[0] = "/connect";
+	m_IrcCommands[1] = "/topic";
+	m_IrcCommands[2] = "/quit";
+	m_IrcCommands[3] = "/names";
 }
 
 void CIrcFrontend::OnConsoleInit()
@@ -64,7 +68,124 @@ bool CIrcFrontend::OnInput(IInput::CEvent Event)
 			}
 			InputHandled = true;
 		}
-		else if (Event.m_Key == KEY_UP)
+		if(Event.m_Flags&IInput::FLAG_PRESS && Event.m_Key == KEY_TAB)
+		{
+			//if the input begins with '/' it has to be a command
+			if (m_Input.GetString()[0] == '/')
+			{
+				//copy input to buffer on first TAB
+				if (!m_CommandCompletion)
+				{
+					str_copy(m_aCompletionBuffer, m_Input.GetString(), m_Input.GetLength()+1);
+					m_CommandCompletion = true;
+				}
+
+				//put the next cmd to the m_Input if it fits the buffer
+				for (int i = 0; i < IRC_MAX_CMDS; i++)
+				{
+					int TempCommandIndex = (m_CommandIndex + i) % IRC_MAX_CMDS;
+					if (!str_comp_nocase_num(m_aCompletionBuffer, m_IrcCommands[TempCommandIndex], str_length(m_aCompletionBuffer)) && str_comp_nocase(m_IrcCommands[TempCommandIndex], m_Input.GetString()))
+					{
+						m_CommandIndex = TempCommandIndex;
+						m_Input.Set(m_IrcCommands[m_CommandIndex]);
+						break;
+					}
+				}
+				return true;
+			}
+
+			//There can't be users if you are not connected
+			if (!Client()->IRCIsConnecnted())
+				return true;
+
+			/*
+			 * The following user-autocompletion and history is nearly the same as in the chat.cpp
+			 */
+
+			// fill the completion buffer
+			if(m_CompletionChosen < 0)
+			{
+				const char *pCursor = m_Input.GetString()+m_Input.GetCursorOffset();
+				for(int Count = 0; Count < m_Input.GetCursorOffset() && *(pCursor-1) != ' '; --pCursor, ++Count);
+				m_PlaceholderOffset = pCursor-m_Input.GetString();
+
+				for(m_PlaceholderLength = 0; *pCursor && *pCursor != ' '; ++pCursor)
+					++m_PlaceholderLength;
+
+				str_copy(m_aCompletionBuffer, m_Input.GetString()+m_PlaceholderOffset, min(static_cast<int>(sizeof(m_aCompletionBuffer)), m_PlaceholderLength+1));
+			}
+
+			// find next possible name
+			const char *pCompletionString = 0;
+			m_CompletionChosen = (m_CompletionChosen+1)%(2*IRC_MAX_USERS);
+			for(int i = 0; i < 2*IRC_MAX_USERS; ++i)
+			{
+				int SearchType = ((m_CompletionChosen+i)%(2*IRC_MAX_USERS))/IRC_MAX_USERS;
+				int Index = (m_CompletionChosen+i)%IRC_MAX_USERS;
+				if(!m_pUsers[Index])
+					continue;
+
+				bool Found = false;
+				if(SearchType == 1)
+				{
+					if(str_comp_nocase_num(m_pUsers[Index], m_aCompletionBuffer, str_length(m_aCompletionBuffer)) &&
+						str_find_nocase(m_pUsers[Index], m_aCompletionBuffer))
+						Found = true;
+				}
+				else if(!str_comp_nocase_num(m_pUsers[Index], m_aCompletionBuffer, str_length(m_aCompletionBuffer)))
+					Found = true;
+
+				if(Found)
+				{
+					pCompletionString = m_pUsers[Index];
+					m_CompletionChosen = Index+SearchType*IRC_MAX_USERS;
+					break;
+				}
+			}
+
+			// insert the name
+			if(pCompletionString)
+			{
+				char aBuf[256];
+				// add part before the name
+				str_copy(aBuf, m_Input.GetString(), min(static_cast<int>(sizeof(aBuf)), m_PlaceholderOffset+1));
+
+				// add the name
+				str_append(aBuf, pCompletionString, sizeof(aBuf));
+
+				// add seperator
+				const char *pSeparator = "";
+				if(*(m_Input.GetString()+m_PlaceholderOffset+m_PlaceholderLength) != ' ')
+					pSeparator = m_PlaceholderOffset == 0 ? ": " : " ";
+				else if(m_PlaceholderOffset == 0)
+					pSeparator = ":";
+				if(*pSeparator)
+					str_append(aBuf, pSeparator, sizeof(aBuf));
+
+				// add part after the name
+				str_append(aBuf, m_Input.GetString()+m_PlaceholderOffset+m_PlaceholderLength, sizeof(aBuf));
+
+				m_PlaceholderLength = str_length(pSeparator)+str_length(pCompletionString);
+				m_OldChatStringLength = m_Input.GetLength();
+				m_Input.Set(aBuf);
+				m_Input.SetCursorOffset(m_PlaceholderOffset+m_PlaceholderLength);
+				InputHandled = true;
+			}
+		}
+		else
+		{
+			// reset name completion process
+			if(Event.m_Flags&IInput::FLAG_PRESS && Event.m_Key != KEY_TAB)
+			{
+				m_CompletionChosen = -1;
+				m_CommandCompletion = false;
+			}
+
+			m_OldChatStringLength = m_Input.GetLength();
+			m_Input.ProcessInput(Event);
+			InputHandled = true;
+		}
+		if (Event.m_Key == KEY_UP)
 		{
 			if (m_pHistoryEntry)
 			{
@@ -256,21 +377,19 @@ void CIrcFrontend::RenderUser(CUIRect UserView)
 	static int s_SelectedUser = 0;
 	static sorted_array<char const *> s_Users; //TODO: XXLTomate: Sort the userlist
 	static float s_ScrollValue = 0;
-	int maxUsers = 128;
-	char **pUsers;
 
-	if (Client()->IRCGetUsers(&pUsers))
+	if (Client()->IRCGetUsers(&m_pUsers))
 		s_Users.clear();
 
-	if(s_Users.size() == 0 && pUsers[0] != NULL)
+	if(s_Users.size() == 0 && m_pUsers[0] != NULL)
 	{
-		for(int i = 0; i < maxUsers; i++)
+		for(int i = 0; i < IRC_MAX_USERS; i++)
 		{
-			if (pUsers[i] == NULL)
+			if (m_pUsers[i] == NULL)
 				break;
 
-			s_Users.add(pUsers[i]);
-			if (str_comp(pUsers[i], Client()->IRCGetNickName()) == 0)
+			s_Users.add(m_pUsers[i]);
+			if (str_comp(m_pUsers[i], Client()->IRCGetNickName()) == 0)
 				s_SelectedUser = i;
 		}
 	}
