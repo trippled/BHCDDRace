@@ -361,6 +361,16 @@ void CPlayer::SetTeam(int Team, bool DoChatMsg)
 		return;
 
 	char aBuf[512];
+	if(Team != TEAM_SPECTATORS && !m_IsLoggedIn)
+	{
+		str_format(aBuf, sizeof(aBuf), "Please register/login first before you can play.");
+		m_pGameServer->SendChatTarget(m_ClientID, aBuf);
+		return;
+	}
+
+
+
+	
 	if(DoChatMsg)
 	{
 		str_format(aBuf, sizeof(aBuf), "'%s' joined the %s", Server()->ClientName(m_ClientID), GameServer()->m_pController->GetTeamName(Team));

@@ -50,6 +50,7 @@ public:
 	void Member(int ClientID, CGameContext *pSelf);
 	void UnMember(int ClientID, CGameContext *pSelf);
 	void Check(int ClientID, CGameContext *pSelf);
+	bool IsRegistered(int ClientID, CGameContext * pSelf)
 };
 
 #endif

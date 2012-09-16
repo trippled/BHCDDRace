@@ -307,3 +307,14 @@ void CMemberList::Check(int ClientID, CGameContext *pSelf)
 
 	pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "member", aBuf);
 }
+
+bool CMemberList::IsRegistered(int ClientID, CGameContext * pSelf)
+{
+	CPlayerMember *pPlayer = SearchList(ClientID, 0);
+	if (!pPlayer)
+		return false;
+	else
+		return true;
+
+}
+
