@@ -9,6 +9,13 @@ SDL.dll
 freetype.dll
 autoexec.cfg
 
+BHCDDRace.sdf
+BHCDDRace.suo
+BHCDDRace.vcxproj.user
+BHCDDRace.sln
+BHCDDRace.vcxproj
+BHCDDRace.vcxproj.filters
+
 crapnet*
 dilate*
 fake_server*
