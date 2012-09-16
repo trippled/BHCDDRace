@@ -104,6 +104,10 @@ void CPlayer::Tick()
 
 	Server()->SetClientScore(m_ClientID, m_Score);
 
+	//BHCmod
+	if(m_Team != TEAM_SPECTATORS && !m_IsLoggedIn)
+		SetTeam(TEAM_SPECTATORS, false);
+
 	//XXLmod
 	if(m_Helped > 0)
 		m_Helped--;
