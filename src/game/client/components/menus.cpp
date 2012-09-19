@@ -675,7 +675,7 @@ void CMenus::RenderLoading()
 	Graphics()->QuadsEnd();
 
 
-	const char *pCaption = Localize("Loading XXLDDRace Client");
+	const char *pCaption = Localize("Loading BHCDDRace Client");
 
 	CUIRect r;
 	r.x = x;

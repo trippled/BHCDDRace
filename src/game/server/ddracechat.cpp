@@ -37,13 +37,19 @@ void CGameContext::ConCredits(IConsole::IResult *pResult, void *pUserData)
 			"Modded mod by XXLTomate.");
 	pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "credit",
 			"Info at XXL-Clan.com .");
+	pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "credit",
+			"Modded mod by [BHC] Trippled.");
+	pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "credit",
+			"Info at black-hell-clan.de .");
 }
 
 void CGameContext::ConInfo(IConsole::IResult *pResult, void *pUserData)
 {
 	CGameContext *pSelf = (CGameContext *) pUserData;
 	pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "info",
-			"-->XXLDDRace<--");
+			"-->BHCDDRace<--");
+	pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "info",
+			"Mod by Black Hell Clan based on");
 	pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "info",
 			"Mod by XXLTomate based on");
 	pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "info",
@@ -51,7 +57,9 @@ void CGameContext::ConInfo(IConsole::IResult *pResult, void *pUserData)
 	pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "info",
 			"XXLDDRace Mod. Version: " XXL_VERSION);
 	pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "info",
-			"Download and info at XXL-Clan.com");
+			"BHCDDRace Mod. Version: " BHC_VERSION);
+	pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "info",
+			"Infos at black-hell-clan.de");
 	pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "info",
 			"For commands /cmdlist");
 }
